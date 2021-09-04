@@ -4,65 +4,27 @@
   <img src="faceRecognitionChapter.jpg" width="400">
 </p>
 
-Face recognition is an artificial intelligence technique used to
-identify or verify the identity of a subject from one or more images
-portraying it.  
-In this project, we implement, in CUDA, one of the many face recognition
-techniques proposed throughout the literature. The choice has fallen on
-the so-called Eigenfaces approach which is based on the Principal
-Component Analysis. It has been chosen due to its simplicity and because
-its basic components are common to other methods so that the present
-project can be easily generalized towards, for example, techniques as
-Fisherfaces or Laplacianfaces.  
-The basic components of Eigenfaces are available in CUDA-accelerated
-libraries. In this chapter, we will learn the basic aspects of the
-OpenCV library which makes several facilities available for image
-manipulation and processing, as well as providing interfacing with
-parallel programming in CUDA . Moreover, we will get acquainted with
-cuSOLVER, another library of the CUDA toolkit, which is a collection of
-functions performing matrix factorizations or computing the solution of
-linear systems based on least square or eigenvalue approaches. In
-particular, we will familiarize ourselves with the parallel calculation
-of the Singular Value Decomposition (SVD) of a matrix.  
-The developed approach will be applied to the face recognition problem
-using a customized database of face images. For the sake of simplicity,
-here we will be ignoring the often employed face detection pre-step, by
-“manually” isolating the image regions containing the relevant
-faces.  
-In this chapter, we will be covering the following topics:
+Face recognition is an artificial intelligence technique used to identify or verify the identity of a subject from one or more images portraying it.  
+In this project, we implement, in CUDA, one of the many face recognition techniques proposed throughout the literature. The choice has fallen on the so-called Eigenfaces approach which is based on the Principal Component Analysis. It has been chosen due to its simplicity and because its basic components are common to other methods so that the present
+project can be easily generalized towards, for example, techniques as Fisherfaces or Laplacianfaces.  
+The basic components of Eigenfaces are available in CUDA-accelerated libraries. In this project, we will learn the basic aspects of the OpenCV library which makes several facilities available for image manipulation and processing, as well as providing interfacing with parallel programming in CUDA. Moreover, we will get acquainted with cuSOLVER, another library of the CUDA toolkit, which is a collection of functions performing matrix factorizations or computing the solution of linear systems based on least square or eigenvalue approaches. In particular, we will familiarize ourselves with the parallel calculation of the Singular Value Decomposition (SVD) of a matrix.  
+The developed approach will be applied to the face recognition problem using a customized database of face images. For the sake of simplicity, here we will be ignoring the often employed face detection pre-step, by “manually” isolating the image regions containing the relevant faces.  
+In this project, we will be covering the following topics:
 
   - Face recognition approaches
-
   - Face recognition by the Eigenface approach
-
   - Using OpenCV with CUDA support
-
   - Principal Component Analysis (PCA)
-
   - Singular Value Decomposition (SVD) using the cuSOLVER library
-
   - Implementation of Eigenface approach
 
-Having an understanding of OpenCV with CUDA support will put you in a
-position to benefit from significant accelerations in computer vision
-and image processing codes.  
-Getting familiar with the cuSOLVER library will enable access to a wide
-range of routines of interest for linear algebra problems.
+Having an understanding of OpenCV with CUDA support will put you in a position to benefit from significant accelerations in computer vision and image processing codes.  
+Getting familiar with the cuSOLVER library will enable access to a wide range of routines of interest for linear algebra problems.
 
 ## Getting Started
 
-In this chapter, the key elements of the Eigenfaces approach will be
-provided on a detailed level and the exploited OpenCV and cuSOLVER
-libraries will be briefly recalled. As prerequisites, fundamental
-knowledge of linear algebra and of the SVD of a matrix is required.
-Knowledge of other kinds of matrix transformations (such as
-bidiagonalization) will be useful for a better understanding of the
-internal operation of the algorithms.  
-The GitHub link for all the code files used in this chapter is here:
-<https://github.com/CIuliusC/CUDA_Book/tree/master/Chapter%2003>.  
-For a mild introduction to the problem and to the required
-technicalities, it is a good idea to examine the most relevant face
-recognition techniques and the rationales behind them.
+In this project, the key elements of the Eigenfaces approach will be provided on a detailed level and the exploited OpenCV and cuSOLVER libraries will be briefly recalled. As prerequisites, fundamental knowledge of linear algebra and of the SVD of a matrix is required. Knowledge of other kinds of matrix transformations (such as bidiagonalization) will be useful for a better understanding of the internal operation of the algorithms.  
+For a mild introduction to the problem and to the required technicalities, it is a good idea to examine the most relevant face recognition techniques and the rationales behind them.
 
 ## Face recognition approaches
 

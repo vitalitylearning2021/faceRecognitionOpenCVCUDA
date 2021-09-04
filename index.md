@@ -1,6 +1,8 @@
 # Face recognition using OpenCV and CUDA
 
-This is a test test test.
+<p align="center">
+  <img src="faceRecognitionChapter.jpg" width="400">
+</p>
 
 Face recognition is an artificial intelligence technique used to
 identify or verify the identity of a subject from one or more images

@@ -55,58 +55,26 @@ In order to illustrate the programming tools that will be used in the present pr
 
 ## Integrating OpenCV with CUDA
 
-In this section, we will first briefly introduce OpenCV along with its
-data types. Then, we will move towards its CUDA-based acceleration,
-discussing some relevant device memory storage issues. Finally, we will
-present two simple examples of OpenCV processing accelerated by CUDA.  
+In this section, we will first briefly introduce OpenCV along with its data types. Then, we will move towards its CUDA-based acceleration, discussing some relevant device memory storage issues. Finally, we will present two simple examples of OpenCV processing accelerated by CUDA.  
 
 ### What is OpenCV?
 
-OpenCV (Open Source Computer Vision Library) is an open-source library
-for computer vision, written in C++, whose most common applications
-concern the following:
+OpenCV (Open Source Computer Vision Library) is an open-source library for computer vision, written in C++, whose most common applications concern the following:
 
-  - image processing (for example, filtering, interpolation, red-eye
-    removal in photos),
-
-  - real-time video streaming (for example, intrusion detection in video
-    surveillance),
-
+  - image processing (for example, filtering, interpolation, red-eye removal in photos),
+  - real-time video streaming (for example, intrusion detection in video surveillance),
   - eye tracking,
-
   - model extraction of a 3D object,
-
   - machine learning in connection to problems of face detection,
-
   - face reconstruction,
-
   - object recognition,
-
   - augmented reality.
 
-During the years, OpenCV has become very popular among researchers and
-developers. This is due to the availability of a large number of highly
-optimized Codes for image processing showing an excellent trade-off
-between accuracy and speed, and due to the support for different,
-everyday use platforms such as Windows, Linux, Android, iOS and MacOS.
-Moreover, OpenCV makes available wrappers for different commonly
-employed programming languages, such as Python, Java, and Matlab.  
-Since 2011, OpenCV routines accelerated by CUDA are at disposal. A guide
-to the available routines can be found in . CUDA accelerated OpenCV
-routines are based on hand-written kernels or on calls to libraries of
-the CUDA ecosystem, such as cuBLAS for matrix operations or NVIDIA
-Performance Primitives (NPP) for video operations, signal processing or
-image functions. Being OpenCV open-source, the details of the
-implementations can be inferred directly by combing through the codes.  
-In the Appendix, a short guide regarding the installation of OpenCV with
-CUDA support on Windows machines and a short example in which OpenCV
-uses the GPU is provided. Unfortunately, none of the face recognition
-classes are CUDA accelerated. As we are using CUDA accelerated by OpenCV
-for face recognition, it will require some handcraft.  
-In order to get familiar with the use of OpenCV with CUDA, we will
-present an introductory example, step-by-step, by matching each step to
-a different Subsection. Before starting the journey, let’s explore
-OpenCV types.
+During the years, OpenCV has become very popular among researchers and developers. This is due to the availability of a large number of highly optimized Codes for image processing showing an excellent trade-off between accuracy and speed, and due to the support for different, everyday use platforms such as Windows, Linux, Android, iOS and MacOS.
+Moreover, OpenCV makes available wrappers for different commonly employed programming languages, such as Python, Java, and Matlab.  
+Since 2011, OpenCV routines accelerated by CUDA are at disposal. CUDA accelerated OpenCV routines are based on hand-written kernels or on calls to libraries of the CUDA ecosystem, such as cuBLAS for matrix operations or NVIDIA Performance Primitives (NPP) for video operations, signal processing or image functions. Being OpenCV open-source, the details of the implementations can be inferred directly by combing through the codes.  
+In the Appendix, a short guide regarding the installation of OpenCV with CUDA support on Windows machines and a short example in which OpenCV uses the GPU is provided. Unfortunately, none of the face recognition classes are CUDA accelerated. As we are using CUDA accelerated by OpenCV for face recognition, it will require some handcraft.  
+In order to get familiar with the use of OpenCV with CUDA, we will present an introductory example, step-by-step, by matching each step to a different Subsection. Before starting the journey, let’s explore OpenCV types.
 
 ## OpenCV data types
 

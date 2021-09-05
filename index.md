@@ -28,83 +28,30 @@ For a mild introduction to the problem and to the required technicalities, it is
 
 ## Face recognition approaches
 
-Recognizing the face of people from a database of static images enables
-unprecedented applications. More and more companies employ facial
-recognition technologies to unlock devices (such as smartphones) or to
-access restricted areas, like banks or airports. Furthermore, Google
-already runs searches of specific human pictures and Facebook already
+Recognizing the face of people from a database of static images enables unprecedented applications. More and more companies employ facial recognition technologies to unlock devices (such as smartphones) or to access restricted areas, like banks or airports. Furthermore, Google already runs searches of specific human pictures and Facebook already
 implements face recognition codes in its social forum.  
-Often, face recognition focuses on the face only in order to work
-properly, while ignoring everything (typically background objects) that
-is not a face. For this reason, its usage is often integrated with face
-detection codes which isolate that part of the image that lies with the
-face and which improves the face recognition performance. The following
-figure illustrates face detection in an image:
+Often, face recognition focuses on the face only in order to work properly, while ignoring everything (typically background objects) that is not a face. For this reason, its usage is often integrated with face detection codes which isolate that part of the image that lies with the face and which improves the face recognition performance. The following figure illustrates face detection in an image:
 
-![Face detection
-([https://commons.wikimedia.org/wiki/File:Facedetection.jpg](https://commons.wikimedia.org/wiki/File:Face_detection.jpg)).](/Chapter03/faceDetection.jpg)
+<p align="center">
+  <img src="faceDetection.png" width="400" id="faceDetection">
+  <br>
+     <em>Figure 1. Face detection.</em>
+</p>
 
-Moreover, face recognition codes must be capable of performing the
-recognition even if the image subject’s face is rotated, shadowed or is
-in any way not in frontal view. The sophisticated processing Codes
-recently developed are able to be significantly robust against such
-non-idealities.  
-A very large number of face recognition codes have been developed
-throughout the literature. Among them, Eigenfaces , Fisherfaces  or
-Laplacianfaces  approaches are very popular. They are based on the
-possibility to reduce the dimensionality of a \(M\times N\) image from
-\(MN\) to \(D\ll MN\) by using second-order global (Eigenfaces and
-Fisherfaces) or local (Laplacianfaces) statistics.  
-More specifically, the Eigenfaces technique uses Principal Component
-Analysis (PCA). PCA computes the eigendecomposition, meaning it
-calculates the eigenvalues and eigenvectors of the covariance matrix of
-the training data. The eigenfaces are the eigenvectors of such an
-eigendecomposition and the relevant subspace is that associated with the
-largest eigenvalues of the covariance matrix. In this way, most of the
-data variance is catched and unnecessary correlations among the original
-features of the training set are eliminated.  
-In some cases, instead of noticing the most variance, it is preferable
-to find a subspace for properly mapping the faces of the training set.
-In particular, faces belonging to the same class are mapped in the same
-direction. Furthermore, training faces belonging to different classes
-are kept as far apart from each other as possible. In these cases,
+Moreover, face recognition codes must be capable of performing the recognition even if the image subject’s face is rotated, shadowed or is in any way not in frontal view. The sophisticated processing codes recently developed are able to be significantly robust against such non-idealities.  
+A very large number of face recognition codes have been developed throughout the literature. Among them, Eigenfaces , Fisherfaces  or Laplacianfaces  approaches are very popular. They are based on the possibility to reduce the dimensionality of a <img src="https://render.githubusercontent.com/render/math?math=M\times N"> image from <img src="https://render.githubusercontent.com/render/math?math=MN"> to <img src="https://render.githubusercontent.com/render/math?math=D\ll MN"> by using second-order global (Eigenfaces and Fisherfaces) or local (Laplacianfaces) statistics.  
+More specifically, the Eigenfaces technique uses Principal Component Analysis (PCA). PCA computes the eigendecomposition, meaning it calculates the eigenvalues and eigenvectors of the covariance matrix of the training data. The eigenfaces are the eigenvectors of such an eigendecomposition and the relevant subspace is that associated with the largest eigenvalues of the covariance matrix. In this way, most of the data variance is catched and unnecessary correlations among the original features of the training set are eliminated.  
+In some cases, instead of noticing the most variance, it is preferable to find a subspace for properly mapping the faces of the training set. In particular, faces belonging to the same class are mapped in the same direction. Furthermore, training faces belonging to different classes are kept as far apart from each other as possible. In these cases,
 Discriminant Analysis (DA) is of interest.  
-The most popular DA is the Linear Discriminant Analysis (LDA) which is
-due to R.A. Fisher, the father of modern statistics, in 1936. When the
-subspace representation of a set of face images is determined by LDA,
-the basis vectors are called Fisherfaces. It has been observed that the
-Fisherfaces method has lower error rates than the Eigenface one.  
-Eigenfaces and Fisherfaces use second-order statistics. However,
-versions thereof exist that are extensions to higher-order statistics.
-They are the so-called Kernel methods and, in particular, the Kernel
-Eigenfaces<span id="eigenfaces!kernel eigenfaces" label="eigenfaces!kernel eigenfaces">\[eigenfaces\!kernel
-eigenfaces\]</span> and Kernel
-Fisherfaces<span id="eigenfaces!kernel fisherfaces" label="eigenfaces!kernel fisherfaces">\[eigenfaces\!kernel
-fisherfaces\]</span> methods, respectively .  
-Different from the “global” behavior of Eigenfaces and Fisherfaces,
-Laplacianfaces use Locality Preserving Projection (LPP) to capture the
-local intrinsic geometry and structure of the data. Laplacianfaces are
-so-called since they are the optimal linear approximations to the
-eigenfunctions of the Laplace-Beltrami operator on the face manifold.  
-Other methods involve the use of *Gabor* wavelets  in which the features
-of the test images are extracted by the homonymous wavelets, the
-employment of hidden Markov models, or the adoption of Active Appearance
-Models (AAM).  
-Of course, each of the above-mentioned methods presents its own
-strengths and weaknesses and often different methods are combined to
-improve the quality of the results. Nonetheless, from the implementation
-point of view, some of them, such as Eigenfaces, Fisherfaces, and
-Laplacianfaces, share common parallel programming tools and
-strategies.  
-For this reason, in this chapter, we will favor theoretical simplicity
-at the expense of performance and will consider the Eigenfaces cases.
-Nevertheless, this approach will enable us to eviscerate a whole series
-of CUDA programming techniques that could be used either to implement
-other face recognition codes or to set up methods of a different
+The most popular DA is the Linear Discriminant Analysis (LDA) which is due to R.A. Fisher, the father of modern statistics, in 1936. When the subspace representation of a set of face images is determined by LDA, the basis vectors are called Fisherfaces. It has been observed that the Fisherfaces method has lower error rates than the Eigenface one.  
+Eigenfaces and Fisherfaces use second-order statistics. However, versions thereof exist that are extensions to higher-order statistics.
+They are the so-called Kernel methods and, in particular, the Kernel Eigenfaces and Kernel Fisherfaces methods, respectively.  
+Different from the “global” behavior of Eigenfaces and Fisherfaces, Laplacianfaces use Locality Preserving Projection (LPP) to capture the local intrinsic geometry and structure of the data. Laplacianfaces are so-called since they are the optimal linear approximations to the eigenfunctions of the Laplace-Beltrami operator on the face manifold.  
+Other methods involve the use of *Gabor* wavelets in which the features of the test images are extracted by the homonymous wavelets, the employment of hidden Markov models, or the adoption of Active Appearance Models (AAM).  
+Of course, each of the above-mentioned methods presents its own strengths and weaknesses and often different methods are combined to improve the quality of the results. Nonetheless, from the implementation point of view, some of them, such as Eigenfaces, Fisherfaces, and Laplacianfaces, share common parallel programming tools and strategies.  
+For this reason, in this project, we will favor theoretical simplicity at the expense of performance and will consider the Eigenfaces cases. Nevertheless, this approach will enable us to eviscerate a whole series of CUDA programming techniques that could be used either to implement other face recognition codes or to set up methods of a different
 nature.  
-In order to illustrate the programming tools that will be used in the
-present project, in the next section, the usage of OpenCV with CUDA
-support will be briefly described with the aid of simple codes.
+In order to illustrate the programming tools that will be used in the present project, in the next section, the usage of OpenCV with CUDA support will be briefly described with the aid of simple codes.
 
 ## Integrating OpenCV with CUDA
 

@@ -33,7 +33,7 @@ implements face recognition codes in its social forum.
 Often, face recognition focuses on the face only in order to work properly, while ignoring everything (typically background objects) that is not a face. For this reason, its usage is often integrated with face detection codes which isolate that part of the image that lies with the face and which improves the face recognition performance. The following figure illustrates face detection in an image:
 
 <p align="center">
-  <img src="faceDetection.png" width="400" id="faceDetection">
+  <img src="faceDetection.jpg" width="400" id="faceDetection">
   <br>
      <em>Figure 1. Face detection.</em>
 </p>

@@ -78,145 +78,76 @@ In order to get familiar with the use of OpenCV with CUDA, we will present an in
 
 ## OpenCV data types
 
-Primitive types in OpenCV are unsigned `char`, `bool`, `signed char`,
-`unsigned short`, `signed short`, `int`, `float` and `double`.  
+Primitive types in OpenCV are unsigned `char`, `bool`, `signed char`, `unsigned short`, `signed short`, `int`, `float` and `double`.  
 All data types in OpenCV have the following syntax:
 
 ``` c++
 CV_<bit-depth>{U|S|F}C(<number_of_channels>)
 ```
 
-From the previous code, `\bigg bit-depth \bigg` is the number of bits
-used by the data type, `U` stands for `unsigned`, `S` for `signed`, for
-`float` and `\bigg number_of_channels \bigg` is the number of involved
-channels. Concerning the latter, the number of channels ranges from `1`
-to `512` and enables to store, for example, grayscale images (\(1\)
-channel) or color images (\(3\) channels).  
-The types that we will use for the face recognition problem will be
-`CV_8UC1`, which will serve to load the grayscale images from the image
-database, and `CV_32FC1`, which will be the type in which the loaded
-image will be cast to subsequently perform the processing.  
-In the next subsection, the key ingredients of CUDA-accelerated with
-OpenCV for the development of the Eigenfaces approach will be dealt
-with. Mastering the programming tools is the first step to being
-successful. The second key point, namely, theory, will be presented
-afterward.
+From the previous code, `\bigg bit-depth \bigg` is the number of bits used by the data type, `U` stands for `unsigned`, `S` for `signed`, for `float` and `\bigg number_of_channels \bigg` is the number of involved channels. Concerning the latter, the number of channels ranges from `1` to `512` and enables to store, for example, grayscale images (<img src="https://render.githubusercontent.com/render/math?math=1"> channel) or color images (<img src="https://render.githubusercontent.com/render/math?math=3"> channels).  
+The types that we will use for the face recognition problem will be `CV_8UC1`, which will serve to load the grayscale images from the image database, and `CV_32FC1`, which will be the type in which the loaded image will be cast to subsequently perform the processing.  
+In the next subsection, the key ingredients of CUDA-accelerated with OpenCV for the development of the Eigenfaces approach will be dealt with. Mastering the programming tools is the first step to being successful. The second key point, namely, theory, will be presented afterward.
 
 ### The GpuMat class and its memory storage
 
-In this subsection, we introduce the key aspects of CUDA-accelerated
-programming with OpenCV which are functional to the face recognition
-approach to be developed. More in detail, the `cv::cuda::GpuMat` class,
-which enables the image to be stored on the GPU, will be illustrated.  
-In this respect, the attention will be focused on the host-device memory
-transfers of the related objects and on the access to its individual
-elements in the light of the typical padding used in the GPU storage for
-such a class. Two illustrative examples will be provided on the handling
-of the `cv::cuda::GpuMat` and the tools that will be employed for the
+In this subsection, we introduce the key aspects of CUDA-accelerated programming with OpenCV which are functional to the face recognition approach to be developed. More in detail, the `cv::cuda::GpuMat` class, which enables the image to be stored on the GPU, will be illustrated.  
+In this respect, the attention will be focused on the host-device memory transfers of the related objects and on the access to its individual elements in the light of the typical padding used in the GPU storage for such a class. Two illustrative examples will be provided on the handling of the `cv::cuda::GpuMat` and the tools that will be employed for the
 development of the face recognition approach.  
-At the end of this subsection, you will have all the programming tools
-to set up Eigenfaces.
+At the end of this subsection, you will have all the programming tools to set up Eigenfaces.
 
 #### The GpuMat class and allocation modality
 
-The class `cv::cuda::GpuMat` is a container class enabling to store
-images in OpenCV on the GPU. A GPU image of grayscale floating-point
-pixels (\(1\) channel), a typical example of an image that we will use
-in facial recognition, is defined for example as:
+The class `cv::cuda::GpuMat` is a container class enabling to store images in OpenCV on the GPU. A GPU image of grayscale floating-point pixels (<img src="https://render.githubusercontent.com/render/math?math=1"> channel), a typical example of an image that we will use in facial recognition, is defined for example as:
 
 ``` c++
 cv::cuda::GpuMat d_A(height, width, CV_32FC1);
 ```
 
-In the previous code, `height` is the number of rows, `width` is the
-number of columns, and `CV_32FC1`, as mentioned above, is the type. By
-using the indicated syntax, OpenCV obviously allocates space for a
-`height x width` matrix in global memory. Nevertheless, it is necessary
-to spend some words concerning the allocation modality.  
-In the previous chapters, we have used “continuous” allocations. In
-other words, the involved vector or matrix elements occupied consecutive
-memory locations. The allocation performed by `cv::cuda::GpuMat` is,
-however, of “non-continuous” kind, also called *pitched*.  
-This means that the matrix is stored row-wise, the row elements are
-stored consecutively, but the address of the first element of a row does
-not correspond to the address following the last element of the previous
-row. The pitched allocation modality is illustrated in the figure below:
+In the previous code, `height` is the number of rows, `width` is the number of columns, and `CV_32FC1`, as mentioned above, is the type. By using the indicated syntax, OpenCV obviously allocates space for a `height x width` matrix in global memory. Nevertheless, it is necessary to spend some words concerning the allocation modality.  
+In the previous chapters, we have used “continuous” allocations. In other words, the involved vector or matrix elements occupied consecutive memory locations. The allocation performed by `cv::cuda::GpuMat` is, however, of “non-continuous” kind, also called *pitched*.  
+This means that the matrix is stored row-wise, the row elements are stored consecutively, but the address of the first element of a row does not correspond to the address following the last element of the previous row. The pitched allocation modality is illustrated in the figure below:
 
-![CUDA pitched memory.](Pictures/Chapter03/pitchedMemory.png)
+<p align="center">
+  <img src="pitchedMemory.png" width="400" id="pitchedMemory">
+  <br>
+     <em>Figure 2. CUDA pitched memory.</em>
+</p>
 
-In other words, between the last element of a row and the first element
-of a subsequent row some unused padding space is left.  
-In order to understand the reasons for this kind of allocation, which
-provides for the nonfull use of global memory, let us briefly recall the
-concept of *coalescence*.
+In other words, between the last element of a row and the first element of a subsequent row some unused padding space is left.  
+In order to understand the reasons for this kind of allocation, which provides for the nonfull use of global memory, let us briefly recall the concept of *coalescence*.
 
 #### Memory coalescence and pitched memory
 
-Coalescence of global memory accesses is one of the most important
-aspects to account for in the optimization of CUDA codes. When the
-thread of a warp requests the read or write access to global memory
-elements, the circuitry of the video card arranges for the global memory
-access to be coalesced into as few transactions as possible.  
-Saying it differently, when the threads of a warp require access to
-global memory elements, groups of contiguous elements, called a *cache
-line*, are entirely withdrawn. Typically, the transactions are minimized
-when the addresses to be read or written satisfy some *alignment*
-requirements.  
-To illustrate what above said, but without going into the details, let
-us assume that a cache line is `128` bytes long. Let us also suppose
-that each thread of a warp requires access to \(4\) bytes of global
-memory. For example, each thread needs a floating-point number which
-indeed occupies \(4\) bytes.  
-If the floating-point numbers requested by all the threads in a warp are
-spatially adjacent and if the first element to be accessed meets a
-\(128\)-bytes alignment, then a single coalesced transaction will be
-enough to service the memory access at hand. Such coalesced memory
-access is illustrated in the figure below:
+Coalescence of global memory accesses is one of the most important aspects to account for in the optimization of CUDA codes. When the thread of a warp requests the read or write access to global memory elements, the circuitry of the video card arranges for the global memory access to be coalesced into as few transactions as possible.  
+Saying it differently, when the threads of a warp require access to global memory elements, groups of contiguous elements, called a *cache line*, are entirely withdrawn. Typically, the transactions are minimized when the addresses to be read or written satisfy some *alignment* requirements.  
+To illustrate what above said, but without going into the details, let us assume that a cache line is `128` bytes long. Let us also suppose that each thread of a warp requires access to <img src="https://render.githubusercontent.com/render/math?math=4"> bytes of global memory. For example, each thread needs a floating-point number which indeed occupies <img src="https://render.githubusercontent.com/render/math?math=4"> bytes.  
+If the floating-point numbers requested by all the threads in a warp are spatially adjacent and if the first element to be accessed meets a <img src="https://render.githubusercontent.com/render/math?math=128">-bytes alignment, then a single coalesced transaction will be enough to service the memory access at hand. Such coalesced memory access is illustrated in the figure below:
 
-![Coalesced memory access.](Pictures/Chapter03/coalescedAccess.png)
+<p align="center">
+  <img src="coalescedAccess.png" width="400" id="coalescedAccess">
+  <br>
+     <em>Figure 3. Coalesced memory access.</em>
+</p>
 
-Opposite to that, even if the \(32\) floating-point numbers to be
-accessed by the entire warp are spatially adjacent, but the first
-element to be accessed does not meet the \(128\)-bytes alignment, then
-the access to all the \(32\) floating-point numbers needed by the entire
-warp will require two transactions since the elements are distributed on
-two different cache lines. This is illustrated in the figure below:
+Opposite to that, even if the <img src="https://render.githubusercontent.com/render/math?math=32"> floating-point numbers to be accessed by the entire warp are spatially adjacent, but the first element to be accessed does not meet the <img src="https://render.githubusercontent.com/render/math?math=128">-bytes alignment, then the access to all the <img src="https://render.githubusercontent.com/render/math?math=32"> floating-point numbers needed by the entire warp will require two transactions since the elements are distributed on two different cache lines. This is illustrated in the figure below:
 
-![Uncoalesced memory access.](Pictures/Chapter03/uncoalescedAccess.png)
+<p align="center">
+  <img src="uncoalescedAccess.png" width="400" id="uncoalescedAccess">
+  <br>
+     <em>Figure 4. Uncoalesced memory access.</em>
+</p>
 
-Then, the reason for the use of pitched memory is that of making the
-memory access more efficient and to improve the performance of
-CUDA-accelerated OpenCV codes. Of course, the padding illustrated in
-figure [1.2](#pitchedMemory) is not always necessary since the number of
-matrix columns can be such that to already guarantee the cache line
-alignment. It is nevertheless possible to check the continuity of the
-allocation by using the method `isContinuous()` which returns `true` if
-the allocation is non-pitched, `false` otherwise.  
-Following this digression, let us familiarize ourselves with the use of
-CUDA under OpenCV with examples.
+
+Then, the reason for the use of pitched memory is that of making the memory access more efficient and to improve the performance of CUDA-accelerated OpenCV codes. Of course, the padding illustrated in figure [2](#pitchedMemory) is not always necessary since the number of matrix columns can be such that to already guarantee the cache line alignment. It is nevertheless possible to check the continuity of the allocation by using the method `isContinuous()` which returns `true` if the allocation is non-pitched, `false` otherwise.  
+Following this digression, let us familiarize ourselves with the use of CUDA under OpenCV with examples.
 
 ## Getting started with OpenCV and CUDA
 
-In this subsection, we present a couple of examples of increasing
-complexity in which we start becoming familiar with the elements of
-CUDA-accelerated OpenCV programming. Such elements, when properly
-combined, will serve to build up the final face recognition approach.
-Indeed, without proper knowledge of the tools of the trade, it is
-impossible to fruitfully do a job.  
-In the first example, we will linger on the basic questions. In
-particular, we will take care of allocation, filling, GPU-access, and
-host-device transfers of host or device OpenCV matrices, specifically
-under the light of the padding typically used in the GPU storage.  
-In the second example, we will highlight the CUDA-accelerated, OpenCV
-routines for the computation of averages and for the matrix
-multiplications needed for the calculation of covariance matrices. We
-will also illustrate the use of the tool, offered by the cuSOLVER
-library, for the evaluation of the SVD of a matrix. It should be however
-noticed that the final approach presented at the end of the chapter will
-not need the explicit computation of covariance matrices.  
-Nevertheless, such an operation will be a good excuse for becoming
-familiar with averages and matrix multiplications, which will be needed
-in the final code. Let’s move on to the first example.
+In this subsection, we present a couple of examples of increasing complexity in which we start becoming familiar with the elements of CUDA-accelerated OpenCV programming. Such elements, when properly combined, will serve to build up the final face recognition approach. Indeed, without proper knowledge of the tools of the trade, it is impossible to fruitfully do a job.  
+In the first example, we will linger on the basic questions. In particular, we will take care of allocation, filling, GPU-access, and host-device transfers of host or device OpenCV matrices, specifically under the light of the padding typically used in the GPU storage.  
+In the second example, we will highlight the CUDA-accelerated, OpenCV routines for the computation of averages and for the matrix multiplications needed for the calculation of covariance matrices. We will also illustrate the use of the tool, offered by the cuSOLVER library, for the evaluation of the SVD of a matrix. It should be however noticed that the final approach presented at the end of the chapter will not need the explicit computation of covariance matrices.  
+Nevertheless, such an operation will be a good excuse for becoming familiar with averages and matrix multiplications, which will be needed in the final code. Let’s move on to the first example.
 
 ### The first example using OpenCV and CUDA
 

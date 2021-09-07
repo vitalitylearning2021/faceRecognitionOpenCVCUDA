@@ -151,34 +151,25 @@ Nevertheless, such an operation will be a good excuse for becoming familiar with
 
 ### The first example using OpenCV and CUDA
 
-The main purpose of the first getting started code is that of
-illustrating the memory organization for what concerns the container
-class `cv::cuda::GpuMat` and how it is possible to perform
-host-to-device and device-to-host transfers using different approaches.
+The main purpose of the first getting started code is that of illustrating the memory organization for what concerns the container class `cv::cuda::GpuMat` and how it is possible to perform host-to-device and device-to-host transfers using different approaches.
 
-1.  To start with, the code stated below creates a `h_A` matrix, of size
-    `2x3`, stored on the host and composed of single-channel `float`
-    elements, just like the matrices that will represent the images of
-    interest in the subsequent face recognition code:
+1.  To start with, the code stated below creates a `h_A` matrix, of size `2x3`, stored on the host and composed of single-channel `float` elements, just like the matrices that will represent the images of interest in the subsequent face recognition code:
     
     ``` c++
     cv::Mat h_A(2, 3, CV_32FC1);
     ```
     
-    Indeed, the container class `cv::Mat` represents the CPU class
-    analogous to `cv::cuda::GpuMat`.  
-    The subsequent rows define the values of the matrix elements so that
-    the matrix is:
+    Indeed, the container class `cv::Mat` represents the CPU class analogous to `cv::cuda::GpuMat`.  
+    The subsequent rows define the values of the matrix elements so that the matrix is:
     
-    \[\label{matrixFaceRecognition}
-            \left[ {\begin{array}{ccc}
+    <p align="center">
+      <img src="https://render.githubusercontent.com/render/math?math=\left[ {\begin{array}{ccc}
             3 & 4 & 12 \\
             -1 & 0.3 & -4.323 \\
-            \end{array} } \right]\]
+            \end{array} } \right]." id="matrixFaceRecognition">       [1]
+    </p>
 
-2.  In particular, the next snippet illustrates (step-by-step), how the
-    `cv::Mat` host matrix `h_A` must be filled to equal the matrix in
-    equation ([\[matrixFaceRecognition\]](#matrixFaceRecognition)):
+2.  In particular, the next snippet illustrates (step-by-step), how the `cv::Mat` host matrix `h_A` must be filled to equal the matrix in equation [\[1\]](#matrixFaceRecognition):
     
     ``` c++
     // --- First row
@@ -191,53 +182,36 @@ host-to-device and device-to-host transfers using different approaches.
         h_A.at<float>(1, 2) = -4.323f;    
     ```
     
-    As it can be seen from the above snippet, the elements of `h_A` are
-    accessed and assigned, thanks to the `cv::Mat::at<T>(r, c)` method,
-    where `r` is the element row, `c` is the element column and the
-    template argument depends on the matrix type.
+    As it can be seen from the above snippet, the elements of `h_A` are accessed and assigned, thanks to the `cv::Mat::at<T>(r, c)` method, where `r` is the element row, `c` is the element column and the template argument depends on the matrix type.
 
-3.  Being C++ `ostream` operator `<<` overloaded on the OpenCV `cv::Mat`
-    class, following the definition of the matrix elements, the entire
-    matrix is visualized:
+3.  Being C++ `ostream` operator `<<` overloaded on the OpenCV `cv::Mat` class, following the definition of the matrix elements, the entire matrix is visualized:
     
     ``` c++
     std::cout << "Matrix = " << std::endl << " " << h_A << std::endl
             << std::endl;
     ```
 
-4.  Moreover, with the aim of showing examples of the use of the method
-    defined in this container class, the overall number of elements is
-    displayed by `h_A.total()`. The code for the same is displayed
-    below:
+4.  Moreover, with the aim of showing examples of the use of the method defined in this container class, the overall number of elements is displayed by `h_A.total()`. The code for the same is displayed below:
     
     ``` c++
     printf("\n\nTotal number of elements of A is %d\n", h_A.total());
     ```
 
-5.  We need to verify whether the allocation of the elements of `h_A` is
-    continuous by using `h_A.isContinuous()`, shown below:
+5.  We need to verify whether the allocation of the elements of `h_A` is continuous by using `h_A.isContinuous()`, shown below:
     
     ``` c++
     printf("Matrix allocation continuous? %d\n", h_A.isContinuous());
     ```
     
-    It should be noticed that, typically, the allocation operated in
-    `cv::Mat` is continuous so that `h_A.isContinuous()` will be true in
-    most of the cases, while the allocation operated in
-    `cv::cuda::GpuMat` is, in most of the cases, pitched.
+    It should be noticed that, typically, the allocation operated in `cv::Mat` is continuous so that `h_A.isContinuous()` will be true in most of the cases, while the allocation operated in `cv::cuda::GpuMat` is, in most of the cases, pitched.
 
-6.  Before considering the `cv::cuda::GpuMat` case, it is convenient to
-    familiarize with the use of pointers to access rows or individual
-    elements of `h_A`. The `cv::Mat` class makes the `ptr()` available.
-    It returns a pointer to the first element of the generic row, say
-    `r`, as shown below:
+6.  Before considering the `cv::cuda::GpuMat` case, it is convenient to familiarize with the use of pointers to access rows or individual elements of `h_A`. The `cv::Mat` class makes the `ptr()` available. It returns a pointer to the first element of the generic row, say `r`, as shown below:
     
     ``` c++
     float *rowPointer = h_A.ptr<float>(r);
     ```
 
-7.  In this way, it is possible to access the element of row `r` and
-    column `c` using `rowPointer[c]`, the code is given below:
+7.  In this way, it is possible to access the element of row `r` and column `c` using `rowPointer[c]`, the code is given below:
     
     ``` c++
     printf("\n\nCPU memory organization - version 1\n");
@@ -247,9 +221,7 @@ host-to-device and device-to-host transfers using different approaches.
                 printf("%f\n", rowPointer[c]); } }
     ```
 
-8.  Alternatively, it is possible to use the field data by `h_A.data`
-    and access the elements of `h_A` consecutively, by recalling that
-    the elements of the class `cv::Mat` are ordered row-wise:
+8.  Alternatively, it is possible to use the field data by `h_A.data` and access the elements of `h_A` consecutively, by recalling that the elements of the class `cv::Mat` are ordered row-wise:
     
     ``` c++
     printf("\n\nCPU memory organization - version 2\n");
@@ -260,25 +232,20 @@ host-to-device and device-to-host transfers using different approaches.
 
 Let’s now turn to the CUDA part.
 
-1.  Once defined the matrix `h_A`, it would be necessary to declare a
-    matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data
-    transfer from host to the device. This is possible by exploiting the
-    `upload()` method, shown below:
+9.  Once defined the matrix `h_A`, it would be necessary to declare a matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data transfer from host to the device. This is possible by exploiting the `upload()` method, shown below:
     
     ``` c++
     cv::cuda::GpuMat d_A;
         d_A.upload(h_A);
     ```
 
-2.  Alternatively, it is possible to define the values of `d_A` directly
-    from `h_A` by using the following line:
+10.  Alternatively, it is possible to define the values of `d_A` directly from `h_A` by using the following line:
     
     ``` c++
     cv::cuda::GpuMat d_A(h_A);
     ```
 
-3.  The code then continues by verifying whether the data `d_A` have a
-    pitched allocation or not:
+11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
     ``` c++
     printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());
@@ -286,9 +253,7 @@ Let’s now turn to the CUDA part.
     
     As mentioned, most likely the allocation will be pitched.
 
-4.  Moreover, the code verifies the type of matrix `d_A` by the method
-    `type()` and its dimensions by the fields `rows` and `cols`, shown
-    below:
+12.  Moreover, the code verifies the type of matrix `d_A` by the method `type()` and its dimensions by the fields `rows` and `cols`, shown below:
     
     ``` c++
     std::string ty = cv::typeToString(d_A.type());
@@ -296,27 +261,18 @@ Let’s now turn to the CUDA part.
             d_A.cols);
     ```
     
-    Of course, such information is available also for the `cv::Mat`
-    class.
+    Of course, such information is available also for the `cv::Mat` class.
 
-5.  At this point, it is didactically useful to investigate how it is
-    possible to transfer the data stored in `d_A` back to a standard
-    array `h_Atest`, functioned on the CPU, of dimensions `d_A.rows *
-    d_A.cols` and allocated by:
+13.  At this point, it is didactically useful to investigate how it is possible to transfer the data stored in `d_A` back to a standard array `h_Atest`, functioned on the CPU, of dimensions `d_A.rows * d_A.cols` and allocated by:
     
     ``` c++
     float *h_Atest = (float *)malloc(d_A.rows * d_A.cols *
             sizeof(float));    
     ```
     
-    Unfortunately, due to the padding in the memory allocation, it is
-    not possible to use `cudaMemcpy` to accomplish such a copy. Indeed,
-    on accounting for the padding, if we would perform a copy of
-    `d_A.rows * d_A.cols * sizeof(float)` bytes, not all the elements of
-    `d_A` would be copied.
+    Unfortunately, due to the padding in the memory allocation, it is not possible to use `cudaMemcpy` to accomplish such a copy. Indeed, on accounting for the padding, if we would perform a copy of `d_A.rows * d_A.cols * sizeof(float)` bytes, not all the elements of `d_A` would be copied.
 
-6.  The function to use for moving pitched memory areas is
-    `cudaMemcpy2D()`, whose syntax is reported below:
+14.  The function to use for moving pitched memory areas is `cudaMemcpy2D()`, whose syntax is reported below:
     
     ``` c++
     cudaError_t cudaMemcpy2D(void * dst, size_t dpitch, 
@@ -326,39 +282,19 @@ Let’s now turn to the CUDA part.
     
     The arguments of `cudaMemcpy2D()` are given in detail below:
     
-      - `dst`: It is the pointer to the destination memory area, namely,
-        for our case, `h_Atest` which points to host-side memory
-        locations.
+      - `dst`: It is the pointer to the destination memory area, namely, for our case, `h_Atest` which points to host-side memory locations.
     
-      - `pitch`: It is the pitch of destination memory in bytes. In our
-        particular case, it coincides with the number of matrix columns
-        (either `h_A` or `d_A`) multiplied by the size of a single
-        `float`, i.e. `sizeof(float)`, since we have already checked
-        that the CPU allocation of the matrix at hand is continuous.
+      - `pitch`: It is the pitch of destination memory in bytes. In our particular case, it coincides with the number of matrix columns (either `h_A` or `d_A`) multiplied by the size of a single `float`, i.e. `sizeof(float)`, since we have already checked that the CPU allocation of the matrix at hand is continuous.
     
-      - `src`: It is the pointer to the destination memory area which
-        equals `(float *)d_A.data`, for the case of our interest.
+      - `src`: It is the pointer to the destination memory area which equals `(float *)d_A.data`, for the case of our interest.
     
-      - `spitch`: It is the pitch of source memory in bytes. Now,
-        `spitch` does not coincide with `d_A.cols * sizeof(float)`,
-        since we know that the matrix has a pitched GPU allocation and
-        such a value would not take into account the padding of each
-        column. The cumulative information on how many bytes each row
-        comprehensive of the padding occupies can be achieved using the
-        step field of `cv::cuda::GpuMat`, that is, `d_A.step`.
+      - `spitch`: It is the pitch of source memory in bytes. Now, `spitch` does not coincide with `d_A.cols * sizeof(float)`, since we know that the matrix has a pitched GPU allocation and such a value would not take into account the padding of each column. The cumulative information on how many bytes each row comprehensive of the padding occupies can be achieved using the step field of `cv::cuda::GpuMat`, that is, `d_A.step`.
     
-      - `width`: It is the dimension, in bytes, of each row obtained by
-        excluding the padding, namely, the number of "interesting" bytes
-        to transfer. The adjective “interesting” indicates that the
-        padding does not contain any information. In our case, width is
-        `d_A.cols * sizeof(float)`, that is, the number of columns by
-        the size of a solitary `float`.
+      - `width`: It is the dimension, in bytes, of each row obtained by excluding the padding, namely, the number of "interesting" bytes to transfer. The adjective “interesting” indicates that the padding does not contain any information. In our case, width is `d_A.cols * sizeof(float)`, that is, the number of columns by the size of a solitary `float`.
     
-      - `height`: It is the number of rows to transfer, `d_A.rows` in
-        our case.
+      - `height`: It is the number of rows to transfer, `d_A.rows` in our case.
     
-      - `cudaMemcpyKind`: It represents the direction of the memory
-        transfer, `cudaMemcpyDeviceToHost` in our case.
+      - `cudaMemcpyKind`: It represents the direction of the memory transfer, `cudaMemcpyDeviceToHost` in our case.
     
     In the case of our interest, the relevant resultant call is thus:
     
@@ -368,9 +304,7 @@ Let’s now turn to the CUDA part.
             cudaMemcpyDeviceToHost));
     ```
 
-7.  To make a consistency check, the code displays also the result of
-    the memory transfer from device to host carried out by
-    `cudaMemcpy2D()`:
+15.  To make a consistency check, the code displays also the result of the memory transfer from device to host carried out by `cudaMemcpy2D()`:
     
     ``` c++
     printf("\n\nUsing cudaMemcpy2D\n");
@@ -378,13 +312,9 @@ Let’s now turn to the CUDA part.
             { printf("%f\n", h_Atest[k]); }
     ```
     
-    The last performed operation is again a printout of the matrix
-    elements, but this time operated by avoiding the device-to-host
-    transfer and by visualizing the elements directly from within a CUDA
-    kernel function.
+    The last performed operation is again a printout of the matrix elements, but this time operated by avoiding the device-to-host transfer and by visualizing the elements directly from within a CUDA kernel function.
 
-8.  The `printKernel()` kernel function in question is illustrated in
-    the Listing below:
+16.  The `printKernel()` kernel function in question is illustrated in the Listing below:
     
     ``` c++
     __global__ void printKernel(const float * __restrict__ srcPtr, const size_t srcStep, const int Nrows, const int Ncols) {
@@ -397,27 +327,14 @@ Let’s now turn to the CUDA part.
         printf("%d %d %d %f\n", srcStep, rowIdx, colIdx, rowSrcPtr[colIdx]); }
     ```
     
-    In the kernel function, the thread of index `(rowIdx, colIdx)`
-    calculates the pointer `rowSrcPtr` to the first element of a row.
-    Such pointer is computed starting from the pointer to the first
-    element of the GPU matrix, namely `srcPtr`. The latter is a `float
-    *`, but is cast to `char *`.  
-    The reason for that is easy to say. Indeed, being `srcStep` the
-    length in bytes of each row including the padding and being the size
-    of a char equal to \(1\) byte, the offset `rowIdx * srcStep` moves
-    the pointer forward of a number of bytes equal to the number of
+    In the kernel function, the thread of index `(rowIdx, colIdx)` calculates the pointer `rowSrcPtr` to the first element of a row. Such pointer is computed starting from the pointer to the first element of the GPU matrix, namely `srcPtr`. The latter is a `float *`, but is cast to `char *`.  
+    The reason for that is easy to say. Indeed, being `srcStep` the length in bytes of each row including the padding and being the size of a char equal to <img src="https://render.githubusercontent.com/render/math?math=1"> byte, the offset `rowIdx * srcStep` moves the pointer forward of a number of bytes equal to the number of
     bytes of all the rows preceding that with index `rowIdx`.  
-    In this way, the pointer positions itself at the first element of
-    the row with index `rowIdx`. However, in Listing
-    [\[printKernel\]](#printKernel), in order to read floating-point
-    elements, the `rowSrcPtr` pointer must be cast back to `float *`.
-    After that, the element of row `rowIdx` and of column `colIdx` can
+    In this way, the pointer positions itself at the first element of the row with index `rowIdx`. However, in Listing [1](#printKernel), in order to read floating-point
+    elements, the `rowSrcPtr` pointer must be cast back to `float *`. After that, the element of row `rowIdx` and of column `colIdx` can
     be accessed as `rowSrcPtr[colIdx]`.
 
-9.  Such kernel function is executed by a two-dimensional array of
-    threads, for which the threads along the `x`-direction (`x` threads)
-    scan the matrix column-wise, while the threads along the
-    `y`-direction (`y` threads) scan the matrix row-wise:
+17.  Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:
     
     ``` c++
     dim3 blockDim(BLOCKSIZE_X, BLOCKSIZE_Y);
@@ -428,8 +345,7 @@ Let’s now turn to the CUDA part.
         cudaCHECK(cudaDeviceSynchronize());    
     ```
 
-10. Finally, let us illustrate also the procedure by which each row is
-    individually transferred and printed out:
+18. Finally, let us illustrate also the procedure by which each row is individually transferred and printed out:
     
     ``` c++
     printf("\n\nUsing cudaMemcpy\n");
@@ -441,12 +357,9 @@ Let’s now turn to the CUDA part.
                 h_Atest[c]); } }
     ```
     
-    Please, notice that `d_A.ptr<float>(r)` points to the first element
-    of the row with index `r`.
+    Please, notice that `d_A.ptr<float>(r)` points to the first element of the row with index `r`.
 
-We are now ready to take some steps towards the tools that we will need
-to implement the face recognition code with an example slightly more
-complicated than the previous one.
+We are now ready to take some steps towards the tools that we will need to implement the face recognition code with an example slightly more complicated than the previous one.
 
 ### The second example using OpenCV and CUDA
 

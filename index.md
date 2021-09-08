@@ -229,7 +229,7 @@ The main purpose of the first getting started code is that of illustrating the m
         printf("%f\n", dataPointer[k]); }
     ```
 
-Let’s now turn to the CUDA part.
+Let’s now turn to the CUDA part. Test.
 
 9.  Once defined the matrix `h_A`, it would be necessary to declare a matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data transfer from host to the device. This is possible by exploiting the `upload()` method, shown below:
     

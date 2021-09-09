@@ -60,7 +60,7 @@ In this section, we will first briefly introduce OpenCV along with its data type
 ### What is OpenCV?
 
 OpenCV (Open Source Computer Vision Library) is an open-source library for computer vision, written in C++, whose most common applications concern the following:
-
+  
   - image processing (for example, filtering, interpolation, red-eye removal in photos),
   - real-time video streaming (for example, intrusion detection in video surveillance),
   - eye tracking,
@@ -153,7 +153,7 @@ Nevertheless, such an operation will be a good excuse for becoming familiar with
 
 The main purpose of the first getting started code is that of illustrating the memory organization for what concerns the container class `cv::cuda::GpuMat` and how it is possible to perform host-to-device and device-to-host transfers using different approaches.
 
-1.  To start with, the code stated below creates a `h_A` matrix, of size `2x3`, stored on the host and composed of single-channel `float` elements, just like the matrices that will represent the images of interest in the subsequent face recognition code:
+  - To start with, the code stated below creates a `h_A` matrix, of size `2x3`, stored on the host and composed of single-channel `float` elements, just like the matrices that will represent the images of interest in the subsequent face recognition code:
     
     ``` c++
     cv::Mat h_A(2, 3, CV_32FC1);
@@ -166,7 +166,7 @@ The main purpose of the first getting started code is that of illustrating the m
       <img src="equation_1.png" width="200" id="matrixFaceRecognition">     [1]
     </p>
     
-2.  In particular, the next snippet illustrates (step-by-step), how the `cv::Mat` host matrix `h_A` must be filled to equal the matrix in equation [\[1\]](#matrixFaceRecognition):
+  - In particular, the next snippet illustrates (step-by-step), how the `cv::Mat` host matrix `h_A` must be filled to equal the matrix in equation [\[1\]](#matrixFaceRecognition):
     
     ``` c++
     // --- First row
@@ -181,19 +181,19 @@ The main purpose of the first getting started code is that of illustrating the m
     
     As it can be seen from the above snippet, the elements of `h_A` are accessed and assigned, thanks to the `cv::Mat::at<T>(r, c)` method, where `r` is the element row, `c` is the element column and the template argument depends on the matrix type.
 
-3.  Being C++ `ostream` operator `<<` overloaded on the OpenCV `cv::Mat` class, following the definition of the matrix elements, the entire matrix is visualized:
+  - Being C++ `ostream` operator `<<` overloaded on the OpenCV `cv::Mat` class, following the definition of the matrix elements, the entire matrix is visualized:
     
     ``` c++
     std::cout << "Matrix = " << std::endl << " " << h_A << std::endl << std::endl;
     ```
 
-4.  Moreover, with the aim of showing examples of the use of the method defined in this container class, the overall number of elements is displayed by `h_A.total()`. The code for the same is displayed below:
+  - Moreover, with the aim of showing examples of the use of the method defined in this container class, the overall number of elements is displayed by `h_A.total()`. The code for the same is displayed below:
     
     ``` c++
     printf("\n\nTotal number of elements of A is %d\n", h_A.total());
     ```
 
-5.  We need to verify whether the allocation of the elements of `h_A` is continuous by using `h_A.isContinuous()`, shown below:
+  - We need to verify whether the allocation of the elements of `h_A` is continuous by using `h_A.isContinuous()`, shown below:
     
     ``` c++
     printf("Matrix allocation continuous? %d\n", h_A.isContinuous());
@@ -201,13 +201,13 @@ The main purpose of the first getting started code is that of illustrating the m
     
     It should be noticed that, typically, the allocation operated in `cv::Mat` is continuous so that `h_A.isContinuous()` will be true in most of the cases, while the allocation operated in `cv::cuda::GpuMat` is, in most of the cases, pitched.
 
-6.  Before considering the `cv::cuda::GpuMat` case, it is convenient to familiarize with the use of pointers to access rows or individual elements of `h_A`. The `cv::Mat` class makes the `ptr()` available. It returns a pointer to the first element of the generic row, say `r`, as shown below:
+  - Before considering the `cv::cuda::GpuMat` case, it is convenient to familiarize with the use of pointers to access rows or individual elements of `h_A`. The `cv::Mat` class makes the `ptr()` available. It returns a pointer to the first element of the generic row, say `r`, as shown below:
     
     ``` c++
     float *rowPointer = h_A.ptr<float>(r);
     ```
 
-7.  In this way, it is possible to access the element of row `r` and column `c` using `rowPointer[c]`, the code is given below:
+  - In this way, it is possible to access the element of row `r` and column `c` using `rowPointer[c]`, the code is given below:
     
     ``` c++
     printf("\n\nCPU memory organization - version 1\n");
@@ -217,7 +217,7 @@ The main purpose of the first getting started code is that of illustrating the m
             printf("%f\n", rowPointer[c]); } }
     ```
 
-8.  Alternatively, it is possible to use the field data by `h_A.data` and access the elements of `h_A` consecutively, by recalling that the elements of the class `cv::Mat` are ordered row-wise:
+  - Alternatively, it is possible to use the field data by `h_A.data` and access the elements of `h_A` consecutively, by recalling that the elements of the class `cv::Mat` are ordered row-wise:
     
     ``` c++
     printf("\n\nCPU memory organization - version 2\n");
@@ -228,27 +228,27 @@ The main purpose of the first getting started code is that of illustrating the m
     
     Let’s now turn to the CUDA part. 
 
-9.  Once defined the matrix `h_A`, it would be necessary to declare a matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data transfer from host to the device. This is possible by exploiting the `upload()` method, shown below:
+  - Once defined the matrix `h_A`, it would be necessary to declare a matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data transfer from host to the device. This is possible by exploiting the `upload()` method, shown below:
     
     ``` c++
     cv::cuda::GpuMat d_A;
     d_A.upload(h_A);
     ```
 
-10.  Alternatively, it is possible to define the values of `d_A` directly from `h_A` by using the following line:
+  - Alternatively, it is possible to define the values of `d_A` directly from `h_A` by using the following line:
 
     ``` c++
     cv::cuda::GpuMat d_A;
     d_A.upload(h_A);
     ```
 
-11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
+  - The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
      printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());
     
      As mentioned, most likely the allocation will be pitched.
 
-12.  Moreover, the code verifies the type of matrix `d_A` by the method `type()` and its dimensions by the fields `rows` and `cols`, shown below:
+  - Moreover, the code verifies the type of matrix `d_A` by the method `type()` and its dimensions by the fields `rows` and `cols`, shown below:
     
     ``` c++
     std::string ty = cv::typeToString(d_A.type());
@@ -257,7 +257,7 @@ The main purpose of the first getting started code is that of illustrating the m
     
     Of course, such information is available also for the `cv::Mat` class.
 
-13.  At this point, it is didactically useful to investigate how it is possible to transfer the data stored in `d_A` back to a standard array `h_Atest`, functioned on the CPU, of dimensions `d_A.rows * d_A.cols` and allocated by:
+  - At this point, it is didactically useful to investigate how it is possible to transfer the data stored in `d_A` back to a standard array `h_Atest`, functioned on the CPU, of dimensions `d_A.rows * d_A.cols` and allocated by:
     
     ``` c++
     float *h_Atest = (float *)malloc(d_A.rows * d_A.cols * sizeof(float));    
@@ -265,7 +265,7 @@ The main purpose of the first getting started code is that of illustrating the m
     
     Unfortunately, due to the padding in the memory allocation, it is not possible to use `cudaMemcpy` to accomplish such a copy. Indeed, on accounting for the padding, if we would perform a copy of `d_A.rows * d_A.cols * sizeof(float)` bytes, not all the elements of `d_A` would be copied.
 
-14.  The function to use for moving pitched memory areas is `cudaMemcpy2D()`, whose syntax is reported below:
+  - The function to use for moving pitched memory areas is `cudaMemcpy2D()`, whose syntax is reported below:
     
     ``` c++
     cudaError_t cudaMemcpy2D(void * dst, size_t dpitch, const void * src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind)    
@@ -293,7 +293,7 @@ The main purpose of the first getting started code is that of illustrating the m
     cudaCHECK(cudaMemcpy2D(h_Atest, d_A.cols * sizeof(float), (float *)d_A.data, d_A.step,d_A.cols * sizeof(float), d_A.rows, cudaMemcpyDeviceToHost));
     ```
 
-15.  To make a consistency check, the code displays also the result of the memory transfer from device to host carried out by `cudaMemcpy2D()`:
+  - To make a consistency check, the code displays also the result of the memory transfer from device to host carried out by `cudaMemcpy2D()`:
     
     ``` c++
     printf("\n\nUsing cudaMemcpy2D\n");
@@ -302,7 +302,7 @@ The main purpose of the first getting started code is that of illustrating the m
     
     The last performed operation is again a printout of the matrix elements, but this time operated by avoiding the device-to-host transfer and by visualizing the elements directly from within a CUDA kernel function.
 
-16.  The `printKernel()` kernel function in question is illustrated in the Listing below:
+  - The `printKernel()` kernel function in question is illustrated in the Listing below:
     
     ``` c++
     __global__ void printKernel(const float * __restrict__ srcPtr, const size_t srcStep, const int Nrows, const int Ncols) {
@@ -322,7 +322,7 @@ The main purpose of the first getting started code is that of illustrating the m
     elements, the `rowSrcPtr` pointer must be cast back to `float *`. After that, the element of row `rowIdx` and of column `colIdx` can
     be accessed as `rowSrcPtr[colIdx]`.
 
-17.  Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:
+  - Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:
     
     ``` c++
     dim3 blockDim(BLOCKSIZE_X, BLOCKSIZE_Y);
@@ -332,7 +332,7 @@ The main purpose of the first getting started code is that of illustrating the m
     cudaCHECK(cudaDeviceSynchronize());    
     ```
 
-18. Finally, let us illustrate also the procedure by which each row is individually transferred and printed out:
+  - Finally, let us illustrate also the procedure by which each row is individually transferred and printed out:
     
     ``` c++
     printf("\n\nUsing cudaMemcpy\n");

@@ -244,11 +244,9 @@ The main purpose of the first getting started code is that of illustrating the m
     
 11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
-    ``` c++
-    printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());
-    ```
+     printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());
     
-    As mentioned, most likely the allocation will be pitched.
+     As mentioned, most likely the allocation will be pitched.
 
 12.  Moreover, the code verifies the type of matrix `d_A` by the method `type()` and its dimensions by the fields `rows` and `cols`, shown below:
     

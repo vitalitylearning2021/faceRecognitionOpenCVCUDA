@@ -237,8 +237,10 @@ The main purpose of the first getting started code is that of illustrating the m
 
 10.  Alternatively, it is possible to define the values of `d_A` directly from `h_A` by using the following line:
 
+    ``` c++
     cv::cuda::GpuMat d_A;
     d_A.upload(h_A);
+    ```
     
 11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     

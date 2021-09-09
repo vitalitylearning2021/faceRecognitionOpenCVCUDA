@@ -241,7 +241,7 @@ The main purpose of the first getting started code is that of illustrating the m
     cv::cuda::GpuMat d_A;
     d_A.upload(h_A);
     ```
-    
+
 11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
      printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());

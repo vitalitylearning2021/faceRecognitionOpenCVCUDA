@@ -244,7 +244,9 @@ The main purpose of the first getting started code is that of illustrating the m
 
   - The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
+    ``` c++
      printf("\n\nGpuMat continuous = %d\n", d_A.isContinuous());
+    ```
     
      As mentioned, most likely the allocation will be pitched.
 
@@ -314,7 +316,10 @@ The main purpose of the first getting started code is that of illustrating the m
         float *rowSrcPtr = (float *)(((char *)srcPtr) + rowIdx * srcStep);
         printf("%d %d %d %f\n", srcStep, rowIdx, colIdx, rowSrcPtr[colIdx]); }
     ```
-    
+<p align="center" id="listing_1" >
+     <em>Listing 1. The `printKernel()` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
+</p>
+
     In the kernel function, the thread of index `(rowIdx, colIdx)` calculates the pointer `rowSrcPtr` to the first element of a row. Such pointer is computed starting from the pointer to the first element of the GPU matrix, namely `srcPtr`. The latter is a `float *`, but is cast to `char *`.  
     The reason for that is easy to say. Indeed, being `srcStep` the length in bytes of each row including the padding and being the size of a char equal to <img src="https://render.githubusercontent.com/render/math?math=1"> byte, the offset `rowIdx * srcStep` moves the pointer forward of a number of bytes equal to the number of
     bytes of all the rows preceding that with index `rowIdx`.  

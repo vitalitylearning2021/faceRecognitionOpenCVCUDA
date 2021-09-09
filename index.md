@@ -225,8 +225,8 @@ The main purpose of the first getting started code is that of illustrating the m
     for (int k = 0; k < h_A.total(); k++) {
         printf("%f\n", dataPointer[k]); }
     ```
-
-Let’s now turn to the CUDA part. 
+    
+    Let’s now turn to the CUDA part. 
 
 9.  Once defined the matrix `h_A`, it would be necessary to declare a matrix `d_A` of class `cv::cuda::GpuMat` and then perform the data transfer from host to the device. This is possible by exploiting the `upload()` method, shown below:
     
@@ -242,10 +242,6 @@ Let’s now turn to the CUDA part.
     d_A.upload(h_A);
     ```
     
-    ``` c++
-    cv::cuda::GpuMat d_A(h_A);
-    ```
-
 11.  The code then continues by verifying whether the data `d_A` have a pitched allocation or not:
     
     ``` c++

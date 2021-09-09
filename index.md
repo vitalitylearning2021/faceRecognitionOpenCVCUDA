@@ -163,7 +163,7 @@ The main purpose of the first getting started code is that of illustrating the m
     The subsequent rows define the values of the matrix elements so that the matrix is:
     
     <p align="center">
-      <img src="equation_1.png" width="400" id="matrixFaceRecognition">     [1]
+      <img src="equation_1.png" width="100" id="matrixFaceRecognition">     [1]
     </p>
     
 2.  In particular, the next snippet illustrates (step-by-step), how the `cv::Mat` host matrix `h_A` must be filled to equal the matrix in equation [\[1\]](#matrixFaceRecognition):

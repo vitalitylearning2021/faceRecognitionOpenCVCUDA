@@ -304,8 +304,14 @@ The main purpose of the first getting started code is that of illustrating the m
     
     The last performed operation is again a printout of the matrix elements, but this time operated by avoiding the device-to-host transfer and by visualizing the elements directly from within a CUDA kernel function.
 
-  - The `printKernel()` kernel function in question is illustrated in the Listing below:
-    
+  - The `printKernel()` kernel function in question is illustrated in Listing [1](#printKernel):
+    In the kernel function, the thread of index `(rowIdx, colIdx)` calculates the pointer `rowSrcPtr` to the first element of a row. Such pointer is computed starting from the pointer to the first element of the GPU matrix, namely `srcPtr`. The latter is a `float *`, but is cast to `char *`.  
+    The reason for that is easy to say. Indeed, being `srcStep` the length in bytes of each row including the padding and being the size of a char equal to <img src="https://render.githubusercontent.com/render/math?math=1"> byte, the offset `rowIdx * srcStep` moves the pointer forward of a number of bytes equal to the number of
+    bytes of all the rows preceding that with index `rowIdx`.  
+    In this way, the pointer positions itself at the first element of the row with index `rowIdx`. However, in Listing [1](#printKernel), in order to read floating-point
+    elements, the `rowSrcPtr` pointer must be cast back to `float *`. After that, the element of row `rowIdx` and of column `colIdx` can
+    be accessed as `rowSrcPtr[colIdx]`.
+  
     ``` c++
     __global__ void printKernel(const float * __restrict__ srcPtr, const size_t srcStep, const int Nrows, const int Ncols) {
         int rowIdx = blockIdx.y * blockDim.y + threadIdx.y;
@@ -316,16 +322,9 @@ The main purpose of the first getting started code is that of illustrating the m
         float *rowSrcPtr = (float *)(((char *)srcPtr) + rowIdx * srcStep);
         printf("%d %d %d %f\n", srcStep, rowIdx, colIdx, rowSrcPtr[colIdx]); }
     ```
-<p align="center" id="listing_1" >
+<p align="center" id="printKernel" >
      <em>Listing 1. The `printKernel()` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
 </p>
-
-    In the kernel function, the thread of index `(rowIdx, colIdx)` calculates the pointer `rowSrcPtr` to the first element of a row. Such pointer is computed starting from the pointer to the first element of the GPU matrix, namely `srcPtr`. The latter is a `float *`, but is cast to `char *`.  
-    The reason for that is easy to say. Indeed, being `srcStep` the length in bytes of each row including the padding and being the size of a char equal to <img src="https://render.githubusercontent.com/render/math?math=1"> byte, the offset `rowIdx * srcStep` moves the pointer forward of a number of bytes equal to the number of
-    bytes of all the rows preceding that with index `rowIdx`.  
-    In this way, the pointer positions itself at the first element of the row with index `rowIdx`. However, in Listing [1](#printKernel), in order to read floating-point
-    elements, the `rowSrcPtr` pointer must be cast back to `float *`. After that, the element of row `rowIdx` and of column `colIdx` can
-    be accessed as `rowSrcPtr[colIdx]`.
 
   - Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:
     

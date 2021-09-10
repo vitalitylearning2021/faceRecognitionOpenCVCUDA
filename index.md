@@ -323,7 +323,7 @@ The main purpose of the first getting started code is that of illustrating the m
         printf("%d %d %d %f\n", srcStep, rowIdx, colIdx, rowSrcPtr[colIdx]); }
     ```
 <p align="center" id="printKernel" >
-     <em>Listing 1. The `printKernel()` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
+     <em>Listing 1. The ```printKernel()``` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
 </p>
 
   - Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:

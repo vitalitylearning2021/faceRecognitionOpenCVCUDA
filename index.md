@@ -547,16 +547,15 @@ Unfortunately, we do not have the possibility of recalling the details of the th
     
     From the previous equation [1.5](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{\Sigma}}"> is an `Nrows x Ncols`
     matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{V}}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
-    For the case we are dealing with, the involved covariance matrix is
-    real so that the conjugate does not operate. The SVD of a matrix is
-    illustrated in figure [1.5](#SVD) below:
+    For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in figure [5](#SVD) below:
     
-    ![Illustrating the SVD of a `m x n` matrix `M`, in the case when `m
-    > n`.](/Chapter03/SVD.jpg)
-    
-    From figure [1.5](#SVD), it can be seen, thanks to its SVD
-    representation, how matrix \(\underline{\underline{A}}\) is factored
-    in terms of matrices \(\underline{\underline{U}}\),
+  <p align="center">
+    <img src="SVD.png" width="400" id="SVD">
+    <br>
+      <em>Figure 5. Illustrating the SVD of a `m x n` matrix `M`, in the case when `m > n`.</em>
+  </p>
+
+    From figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}">
     \(\underline{\underline{\Sigma}}\) and
     \(\underline{\underline{V}}\). More in detail, it can be seen that
     matrix \(\underline{\underline{\Sigma}}\) has non-vanishing elements

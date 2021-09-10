@@ -275,9 +275,9 @@ The main purpose of the first getting started code is that of illustrating the m
     
     The arguments of `cudaMemcpy2D()` are given in detail below:
     
-      - `dst`: It is the pointer to the destination memory area, namely, for our case, `h_Atest` which points to host-side memory locations.
+      * `dst`: It is the pointer to the destination memory area, namely, for our case, `h_Atest` which points to host-side memory locations.
     
-      - `pitch`: It is the pitch of destination memory in bytes. In our particular case, it coincides with the number of matrix columns (either `h_A` or `d_A`) multiplied by the size of a single `float`, i.e. `sizeof(float)`, since we have already checked that the CPU allocation of the matrix at hand is continuous.
+      * `pitch`: It is the pitch of destination memory in bytes. In our particular case, it coincides with the number of matrix columns (either `h_A` or `d_A`) multiplied by the size of a single `float`, i.e. `sizeof(float)`, since we have already checked that the CPU allocation of the matrix at hand is continuous.
     
       - `src`: It is the pointer to the destination memory area which equals `(float *)d_A.data`, for the case of our interest.
     

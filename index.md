@@ -279,15 +279,15 @@ The main purpose of the first getting started code is that of illustrating the m
     
       * `pitch`: It is the pitch of destination memory in bytes. In our particular case, it coincides with the number of matrix columns (either `h_A` or `d_A`) multiplied by the size of a single `float`, i.e. `sizeof(float)`, since we have already checked that the CPU allocation of the matrix at hand is continuous.
     
-      - `src`: It is the pointer to the destination memory area which equals `(float *)d_A.data`, for the case of our interest.
+      * `src`: It is the pointer to the destination memory area which equals `(float *)d_A.data`, for the case of our interest.
     
-      - `spitch`: It is the pitch of source memory in bytes. Now, `spitch` does not coincide with `d_A.cols * sizeof(float)`, since we know that the matrix has a pitched GPU allocation and such a value would not take into account the padding of each column. The cumulative information on how many bytes each row comprehensive of the padding occupies can be achieved using the step field of `cv::cuda::GpuMat`, that is, `d_A.step`.
+      * `spitch`: It is the pitch of source memory in bytes. Now, `spitch` does not coincide with `d_A.cols * sizeof(float)`, since we know that the matrix has a pitched GPU allocation and such a value would not take into account the padding of each column. The cumulative information on how many bytes each row comprehensive of the padding occupies can be achieved using the step field of `cv::cuda::GpuMat`, that is, `d_A.step`.
     
-      - `width`: It is the dimension, in bytes, of each row obtained by excluding the padding, namely, the number of "interesting" bytes to transfer. The adjective “interesting” indicates that the padding does not contain any information. In our case, width is `d_A.cols * sizeof(float)`, that is, the number of columns by the size of a solitary `float`.
+      * `width`: It is the dimension, in bytes, of each row obtained by excluding the padding, namely, the number of "interesting" bytes to transfer. The adjective “interesting” indicates that the padding does not contain any information. In our case, width is `d_A.cols * sizeof(float)`, that is, the number of columns by the size of a solitary `float`.
     
-      - `height`: It is the number of rows to transfer, `d_A.rows` in our case.
+      * `height`: It is the number of rows to transfer, `d_A.rows` in our case.
     
-      - `cudaMemcpyKind`: It represents the direction of the memory transfer, `cudaMemcpyDeviceToHost` in our case.
+      * `cudaMemcpyKind`: It represents the direction of the memory transfer, `cudaMemcpyDeviceToHost` in our case.
     
     In the case of our interest, the relevant resultant call is thus:
     

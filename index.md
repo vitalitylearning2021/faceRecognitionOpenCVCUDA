@@ -323,7 +323,7 @@ The main purpose of the first getting started code is that of illustrating the m
         printf("%d %d %d %f\n", srcStep, rowIdx, colIdx, rowSrcPtr[colIdx]); }
     ```
 <p align="center" id="printKernel" >
-     <em>Listing 1. The ```printKernel()``` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
+     <em>Listing 1. The `printKernel()` kernel function to print the elements of a `cv::cuda::GpuMat` matrix.</em>
 </p>
 
   - Such kernel function is executed by a two-dimensional array of threads, for which the threads along the `x`-direction (`x` threads) scan the matrix column-wise, while the threads along the `y`-direction (`y` threads) scan the matrix row-wise:
@@ -352,19 +352,11 @@ We are now ready to take some steps towards the tools that we will need to imple
 
 ### The second example using OpenCV and CUDA
 
-The purpose of this second example is to compute the SVD of the
-covariance matrix between two images. These operations, apart from some
-minor differences, are those underlying the Eigenfaces face recognition.
-The code available in GitHub will contain not only the steps below
-illustrated but also printouts of the intermediate results. For the sake
-of brevity, such check-points will be omitted below since we have
-already shown how to achieve them in the code above.  
-Unfortunately, we do not have the possibility of recalling the details
-of the theory behind SVD, so that we assume the previous knowledge.
+The purpose of this second example is to compute the SVD of the covariance matrix between two images. These operations, apart from some minor differences, are those underlying the Eigenfaces face recognition. The code available in GitHub will contain not only the steps below illustrated but also printouts of the intermediate results. For the sake
+of brevity, such check-points will be omitted below since we have already shown how to achieve them in the code above.  
+Unfortunately, we do not have the possibility of recalling the details of the theory behind SVD, so that we assume the previous knowledge.
 
-1.  For the time being, we will not use real images loaded from files,
-    but we will consider two small, `2x3` matrices defined from within
-    the code as done before.  
+  - For the time being, we will not use real images loaded from files, but we will consider two small, `2x3` matrices defined from within the code as done before.  
     The following code shows the initialization of the matrices:
     
     ``` c++
@@ -389,15 +381,10 @@ of the theory behind SVD, so that we assume the previous knowledge.
         h_A2.at<float>(1, 2) = 11.121f;
     ```
     
-    These images will play the role of the database images used in our
-    final project for face recognition.
+    These images will play the role of the database images used in our final project for face recognition.
 
-2.  After having defined the two matrices `h_A1` and `h_A2` on CPU, the
-    idea is to reshaping them to rows and uploading them as the rows of
-    a GPU matrix, say `d_A`, of dimension `2x6`, in which the rows
-    correspond to the two matrices, while the columns correspond to the
-    matrix elements. This is done with the following Listing
-    [\[H2DCopy\]](#H2DCopy):
+  - After having defined the two matrices `h_A1` and `h_A2` on CPU, the idea is to reshaping them to rows and uploading them as the rows of a GPU matrix, say `d_A`, of dimension `2x6`, in which the rows correspond to the two matrices, while the columns correspond to the matrix elements. This is done with the following Listing
+    [2](#H2DCopy):
     
     ``` c++
     // --- Transform matrix A1 into row
@@ -417,53 +404,25 @@ of the theory behind SVD, so that we assume the previous knowledge.
         h_A2.ptr<float>(0),h_A2.step * sizeof(float),
         h_A2.cols * sizeof(float),1,cudaMemcpyHostToDevice));
     ```
+    <p align="center" id="printKernel" >
+       <em>Listing 2. Host-to-Device matrix copy.</em>
+    </p>    
     
-    The first part of the snippet regards the reshaping of matrices
-    `h_A1` and `h_A2` in rows. This is obtained by using the `reshape()`
-    method. It should be noticed that the first argument of `reshape()`
-    refers to the new number of channels that the reshaped matrix
-    must-have. A value of `0` implies that the number of channels must
-    be unchanged. The second argument is the new number of rows. Of
-    course, the new number of columns is computed accordingly.  
-    Once performed the reshape, the two obtained rows should be copied
-    within the rows of matrix `d_A`. This is carried out by transferring
-    the individual rows using `cudaMemcpy2D()` in a similar fashion to
-    the last part of the example code illustrated in the foregoing
-    subsection.
+    The first part of the snippet regards the reshaping of matrices `h_A1` and `h_A2` in rows. This is obtained by using the `reshape()` method. It should be noticed that the first argument of `reshape()` refers to the new number of channels that the reshaped matrix must-have. A value of `0` implies that the number of channels must
+    be unchanged. The second argument is the new number of rows. Of course, the new number of columns is computed accordingly. Once performed the reshape, the two obtained rows should be copied within the rows of matrix `d_A`. This is carried out by transferring the individual rows using `cudaMemcpy2D()` in a similar fashion to the last part of the example code illustrated in the foregoing subsection.
 
-3.  Now, in order to compute the covariance matrix of the two images, it
-    is necessary to evaluate the “average” image and then subtract it
-    from the entire database. In other words, each database image must
-    be “shifted” of an amount equal to the average image. From the
-    programming point of view, the “average” image can be calculated as
-    the column-wise mean of matrix `d_A`:
+  - Now, in order to compute the covariance matrix of the two images, it is necessary to evaluate the “average” image and then subtract it from the entire database. In other words, each database image must be “shifted” of an amount equal to the average image. From the programming point of view, the “average” image can be calculated as the column-wise mean of matrix `d_A`:
     
     ``` c++
     cv::cuda::GpuMat d_mean(1, h_A1.total(), CV_32FC1);
         cv::cuda::reduce(d_A, d_mean, 0, 1);
     ```
     
-    The average vector, which is a `1x6` vector, is hosted by the
-    `d_mean` matrix. The average is essentially a reduction operation
-    since, for what above said, each element of `d_mean` must equal the
-    average of the corresponding column of `d_A`. Moreover, as seen in
-    the foregoing chapter, a reduction is something that can be
-    performed in CUDA in a particularly efficient way. Fortunately, in
-    OpenCV, the function `cv::cuda::reduce` performing the parallel
-    reduction on GPU is available. The first two arguments of such a
-    function are the source `d_A` and destination `d_mean` matrices,
-    respectively.  
-    The third argument represents the dimension along which performing
-    the reduction. In our case, since we want a reduction along the
-    columns, we use `0` as an argument. Finally, the fourth argument
-    specifies whether a simple summation, an average, a maximum or a
-    minimum is of interest. Since we need an average, the fourth
-    argument is `1`. The average array is finally moved to the host for
-    a check.
+    The average vector, which is a `1x6` vector, is hosted by the `d_mean` matrix. The average is essentially a reduction operation since, for what above said, each element of `d_mean` must equal the average of the corresponding column of `d_A`. Moreover, as seen in the foregoing chapter, a reduction is something that can be performed in CUDA in a particularly efficient way. Fortunately, in OpenCV, the function `cv::cuda::reduce` performing the parallel reduction on GPU is available. The first two arguments of such a
+    function are the source `d_A` and destination `d_mean` matrices, respectively.  
+    The third argument represents the dimension along which performing the reduction. In our case, since we want a reduction along the columns, we use `0` as an argument. Finally, the fourth argument specifies whether a simple summation, an average, a maximum or a minimum is of interest. Since we need an average, the fourth argument is `1`. The average array is finally moved to the host for a check.
 
-4.  Once computed the average, we need to subtract it from every single
-    row of `d_A`. This is performed by the following
-    `removeMeanKernel()` kernel function:
+  - Once computed the average, we need to subtract it from every single row of `d_A`. This is performed by the following `removeMeanKernel()` kernel function:
     
     ``` c++
     __global__ void removeMeanKernel(const float * __restrict__
@@ -481,10 +440,11 @@ of the theory behind SVD, so that we assume the previous knowledge.
                 rowIdx * dstStep);
             rowDstPtr[colIdx] = rowDstPtr[colIdx] - rowSrcPtr[colIdx];}
     ```
-
-5.  Such kernel function is very similar to that in Listing
-    [\[printKernel\]](#printKernel) and will not be further detailed. It
-    is executed by using the following call:
+    <p align="center" id="printKernel" >
+       <em>Listing 3. The `removeMeanKernel()` kernel function to remove the average from each row of `d_A`.</em>
+    </p>    
+    
+  - Such kernel function is very similar to that in Listing [1](#printKernel) and will not be further detailed. It is executed by using the following call:
     
     ``` c++
     dim3 blockDim(BLOCKSIZE_X, BLOCKSIZE_Y);
@@ -495,20 +455,10 @@ of the theory behind SVD, so that we assume the previous knowledge.
         cudaCHECK(cudaDeviceSynchronize());
     ```
     
-    It should be noticed that `d_mean.step` and `d_A.step` are the
-    lengths, in bytes, of the rows of `d_mean` and `d_A` including the
-    padding, the number `2` indicates the number of rows of `d_A` and
-    `h_A1.total()` is its number of rows.  
-    Once removed the average from the images, it is time to compute the
-    covariance matrix.
+    It should be noticed that `d_mean.step` and `d_A.step` are the lengths, in bytes, of the rows of `d_mean` and `d_A` including the padding, the number `2` indicates the number of rows of `d_A` and `h_A1.total()` is its number of rows.  
+    Once removed the average from the images, it is time to compute the covariance matrix.
 
-6.  The covariance matrix can be computed as a matrix product, i.e., the
-    product between `d_A` and its transpose. Being the covariance matrix
-    symmetrical, it can be equivalently calculated as the transpose of
-    `d_A` and `d_A` itself. Accordingly, a `2x2` matrix `d_Cov` is
-    defined and the `cv::cuda::gemm` routine, available in the CUDA
-    extension of OpenCV, is exploited. The `cv::cuda::gemm` routine uses
-    cuBLAS under the hood and its syntax is reported below:
+  - The covariance matrix can be computed as a matrix product, i.e., the product between `d_A` and its transpose. Being the covariance matrix symmetrical, it can be equivalently calculated as the transpose of `d_A` and `d_A` itself. Accordingly, a `2x2` matrix `d_Cov` is defined and the `cv::cuda::gemm` routine, available in the CUDA extension of OpenCV, is exploited. The `cv::cuda::gemm` routine uses cuBLAS under the hood and its syntax is reported below:
     
     ``` c++
     cv::cuda::gemm(const GpuMat& src1, const GpuMat& src2, 
@@ -516,27 +466,17 @@ of the theory behind SVD, so that we assume the previous knowledge.
             int flags=0, Stream& stream=Stream::Null())
     ```
 
-7.  The result of the matrix product is stored in `dst`:
+  - The result of the matrix product is stored in `dst`:
     
     ``` c++
     dst = alpha * op1(src1) * op2(src2) + beta * op3(src3)
     ```
     
-    Actually, `cv::cuda::gemm` executes a weighted product, with weight
-    `alpha`, of `src1` and `src2` and afterward performs a weighted sum,
-    with weight `beta`, of the product result and `src3`. Before
-    performing the operations among `src1`, `src2`, and `src3`, the
-    matrices undergo operations denoted by `op1()`, `op2()` and `op3()`,
-    respectively.  
-    Such operations are transpose operations and the need to perform
-    them must be expressed by the flags argument. In particular, such an
-    argument should equal the sum `c1 * GEMM_1_T + c2 * GEMM_2_T + c3 *
-    GEMM_3_T` where `c1`, `c2`, and `c3` are `1` or `0` depending on the
-    need, for the corresponding matrix, to perform the transposition or
-    not. Finally, the field stream will not be focused being outside the
-    scope of this chapter.
+    Actually, `cv::cuda::gemm` executes a weighted product, with weight `alpha`, of `src1` and `src2` and afterward performs a weighted sum, with weight `beta`, of the product result and `src3`. Before performing the operations among `src1`, `src2`, and `src3`, the matrices undergo operations denoted by `op1()`, `op2()` and `op3()`, respectively.  
+    Such operations are transpose operations and the need to perform them must be expressed by the flags argument. In particular, such an argument should equal the sum `c1 * GEMM_1_T + c2 * GEMM_2_T + c3 * GEMM_3_T` where `c1`, `c2`, and `c3` are `1` or `0` depending on the need, for the corresponding matrix, to perform the transposition or
+    not. Finally, the field stream will not be focused being outside the scope of this project.
 
-8.  The rows for the computation of the covariance matrix are below:
+  - The rows for the computation of the covariance matrix are below:
     
     ``` c++
     const int Nrows = 2;
@@ -545,130 +485,68 @@ of the theory behind SVD, so that we assume the previous knowledge.
         cv::cuda::gemm(d_A, d_A, 1.f, d_Cov, 0.f, d_Cov, cv::GEMM_2_T); 
     ```
     
-    Following the computation of the covariance matrix, we now turn to
-    compute its Singular Value Decomposition (SVD) .  
-    As one might have noticed, in the last code snippet, the dimensions
-    of `d_Cov` have been defined in an abstract way using `Nrows` and
-    `Ncols`. Although this is not strictly necessary for the present
-    example since we already know that `d_Cov` is `2x2`, this makes the
-    following portion of code for the computation of the SVD reusable by
-    yourself.
+    Following the computation of the covariance matrix, we now turn to compute its Singular Value Decomposition (SVD).  
+    As one might have noticed, in the last code snippet, the dimensions of `d_Cov` have been defined in an abstract way using `Nrows` and `Ncols`. Although this is not strictly necessary for the present example since we already know that `d_Cov` is `2x2`, this makes the following portion of code for the computation of the SVD reusable by yourself.
     
-    Unfortunately, the SVD functionality is not present in the CUDA
-    extension of OpenCV. Nevertheless, the SVD can be computed using a
-    routine of the cuSOLVER library. In particular, for our purposes,
-    the `cusolverDnSgesvd()` function is of interest.
+    Unfortunately, the SVD functionality is not present in the CUDA extension of OpenCV. Nevertheless, the SVD can be computed using a routine of the cuSOLVER library. In particular, for our purposes, the `cusolverDnSgesvd()` function is of interest.
     
-    In the function `cusolverDnSgesvd()`, we recognize the presence of
-    the `Dn` tag which stands for “dense”, of the capital letter `S`
-    which stands for “real, single precision” and of the actual
-    routine’s name which is `gesvd`. Indeed, the matrix at hand is
-    dense and, within the cuSOLVER library, routines for both, dense and
-    sparse matrix are available, the latter being tagged with `Sp`.  
-    Moreover, the `gesvd` routine is also available for
-    double-precision, real matrices (with `D` in place of `S`), for
-    single precision, complex matrices (with `C` in place of `S`) or for
-    double-precision, complex matrices (with `Z` in place of `S`).
+    In the function `cusolverDnSgesvd()`, we recognize the presence of the `Dn` tag which stands for “dense”, of the capital letter `S` which stands for “real, single precision” and of the actual routine’s name which is `gesvd`. Indeed, the matrix at hand is dense and, within the cuSOLVER library, routines for both, dense and sparse matrix are available, the latter being tagged with `Sp`.  
+    Moreover, the `gesvd` routine is also available for double-precision, real matrices (with `D` in place of `S`), for single precision, complex matrices (with `C` in place of `S`) or for double-precision, complex matrices (with `Z` in place of `S`).
 
-9.  The use of cuSOLVER routines can be preceded by the initialization
-    of a handle of type `cuSolverHandle`. This is performed by the
-    routine as `cusolverDnCreate()`:
+  - The use of cuSOLVER routines can be preceded by the initialization of a handle of type `cuSolverHandle`. This is performed by the routine as `cusolverDnCreate()`:
     
     ``` c++
     cusolverDnHandle_t cuSolverHandle;
         cuSolverCHECK(cusolverDnCreate(&cuSolverHandle));
     ```
     
-    Note that the call to the `cusolverDnCreate()` in the above code
-    snippet is decorated by `cuSolverCHECK()`. Such function intercepts
-    the error messages emitted by cuSOLVER routines in a fashion similar
-    to `cudaCHECK()` as explained in chapter 1. So, for the sake of
-    brevity, this point will not be further discussed in the present
-    chapter.  
-    The definition of `cuSolverCHECK()` is available from the GitHub
-    page of the present project. We will need to use `cuSolverCHECK()`
-    to decorate any call to cuSOLVER routines.
+    Note that the call to the `cusolverDnCreate()` in the above code snippet is decorated by `cuSolverCHECK()`. Such function intercepts the error messages emitted by cuSOLVER routines in a fashion similar to `cudaCHECK()` as explained in chapter 1. So, for the sake of brevity, this point will not be further discussed in the present project.  
+    The definition of `cuSolverCHECK()` is available from the GitHub page of the present project. We will need to use `cuSolverCHECK()` to decorate any call to cuSOLVER routines.
 
-10. The execution of `cusolverDnSgesvd()` must be preceded, in turn, by
-    the execution of the `cusolverDnSgesvd_bufferSize()` helper function
-    whose syntax is:
+  - The execution of `cusolverDnSgesvd()` must be preceded, in turn, by the execution of the `cusolverDnSgesvd_bufferSize()` helper function whose syntax is:
     
     ``` c++
     cusolverDnSgesvd_bufferSize(cuSolverHandle, Nrows, Ncols,
             &workSize);
     ```
     
-    In the previous code, `workSize` is a piece of information (a single
-    `int`) on the size of the workspace that must be allocated and
-    passed to `cusolverDnSgesvd()` that is declared and initialized as:
+    In the previous code, `workSize` is a piece of information (a single `int`) on the size of the workspace that must be allocated and passed to `cusolverDnSgesvd()` that is declared and initialized as:
     
     ``` c++
     int workSize = 0;
     ```
 
-11. In our case, the invocation to `cusolverDnSgesvd_bufferSize()` is
-    given below:
+  - In our case, the invocation to `cusolverDnSgesvd_bufferSize()` is given below:
     
     ``` c++
     cuSolverCHECK(cusolverDnSgesvd_bufferSize(cuSolverHandle, Nrows,
             Ncols, &workSize));
     ```
     
-    Once invoked `cusolverDnSgesvd_bufferSize()`, a `float` array of
-    dimension `workSize` must be reserved as:
+    Once invoked `cusolverDnSgesvd_bufferSize()`, a `float` array of dimension `workSize` must be reserved as:
     
     ``` c++
     float *workArray; cudaCHECK(cudaMalloc(&workArray, 
             workSize * sizeof(float)));    
     ```
 
-12. Before launching the `cusolverDnSgesvd()` routine, it is necessary
-    to allocate space of a single `int` for the single-element array
-    `devInfo` like:
+  - Before launching the `cusolverDnSgesvd()` routine, it is necessary to allocate space of a single `int` for the single-element array `devInfo` like:
     
     ``` c++
     int *devInfo; cudaCHECK(cudaMalloc(&devInfo, sizeof(int)));   
     ```
     
-    In the previous code, `devInfo`, indeed, is a diagnostic output
-    single-element array of the SVD routine. If its only element is `0`,
-    then `cusolverDnSgesvd()` has been successful. If `devInfo = -i`,
-    with `i` positive, then the `i`-th input parameter (not counting
-    `cuSolverHandle`) is wrong. If `devInfo > 0`, then
-    `cusolverDnSgesvd()` has not reached convergence.  
-    In the latter case, it should be taken into account that
-    `cusolverDnSgesvd()` internally uses a *bidiagonalization* approach
-    (namely, the matrix is transformed to a bidiagonal form, having only
-    the main and the first upper diagonals) and `devInfo` provides
-    information on how many super diagonal elements of an intermediate
-    bidiagonal matrix have missed convergence to `0`. Such super
-    diagonal is then stored in an array of `min(Nrows, Ncols) - 1`
-    elements `rWork` as the output of `cusolverDnSgesvd()`.  
-    However, the aspects related to the super diagonal are
-    technicalities for experts in numerical computation, so that, in the
-    present example as well as for the full Eigenfaces approach, will be
-    skipped. As a consequence, as provided by `cusolverDnSgesvd()`, we
-    will use `NULL` as `rWork` argument. In this way,
-    `cusolverDnSgesvd()` knows that it must not output such
-    information.  
-    Before launching `cusolverDnSgesvd()`, space for the SVD output must
-    be allocated. It should be recalled that, given a matrix
-    \(\underline{\underline{A}}\), `cusolverDnSgesvd()` provides the
-    following factorization:
+    In the previous code, `devInfo`, indeed, is a diagnostic output single-element array of the SVD routine. If its only element is `0`, then `cusolverDnSgesvd()` has been successful. If `devInfo = -i`, with `i` positive, then the `i`-th input parameter (not counting `cuSolverHandle`) is wrong. If `devInfo > 0`, then `cusolverDnSgesvd()` has not reached convergence.  
+    In the latter case, it should be taken into account that `cusolverDnSgesvd()` internally uses a *bidiagonalization* approach (namely, the matrix is transformed to a bidiagonal form, having only the main and the first upper diagonals) and `devInfo` provides information on how many super diagonal elements of an intermediate bidiagonal matrix have missed convergence to `0`. Such super diagonal is then stored in an array of `min(Nrows, Ncols) - 1` elements `rWork` as the output of `cusolverDnSgesvd()`.  
+    However, the aspects related to the super diagonal are technicalities for experts in numerical computation, so that, in the present example as well as for the full Eigenfaces approach, will be skipped. As a consequence, as provided by `cusolverDnSgesvd()`, we will use `NULL` as `rWork` argument. In this way, `cusolverDnSgesvd()` knows that it must not output such information.  
+    Before launching `cusolverDnSgesvd()`, space for the SVD output must be allocated. It should be recalled that, given a matrix <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}">, `cusolverDnSgesvd()` provides the following factorization:
     
-    \[\label{SVD}
-            \underline{\underline{A}}= \underline{\underline{U}}\cdot \underline{\underline{\Sigma}}\cdot \underline{\underline{V}}^H\]
+    <p align="center">
+      <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}= \underline{\underline{U}}\cdot \underline{\underline{\Sigma}}\cdot \underline{\underline{V}}^H." id="SVD">       [2]
+    </p>
     
-    From the previous equation ([1.5](#SVD)),
-    \(\underline{\underline{\Sigma}}\) notation is an `Nrows x Ncols`
-    matrix which is zero except for its `min(Nrows, Ncols)` diagonal
-    elements which are called *singular values*. The
-    \(\underline{\underline{U}}\) notation is an `Nrows x Nrows` unitary
-    matrix whose columns \(\underline{u}_m\) are called *left singular
-    vectors*, \(\underline{\underline{V}}\) notation is an `Ncols x
-    Ncols` unitary matrix whose columns \(\underline{v}_n\) are called
-    *right singular vectors*, and \(^H\) denotes conjugate
-    transposition.  
+    From the previous equation [1.5](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{\Sigma}}"> is an `Nrows x Ncols`
+    matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{V}}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
     For the case we are dealing with, the involved covariance matrix is
     real so that the conjugate does not operate. The SVD of a matrix is
     illustrated in figure [1.5](#SVD) below:

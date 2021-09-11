@@ -547,7 +547,7 @@ Unfortunately, we do not have the possibility of recalling the details of the th
     
     From the previous equation [\[5\]](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> is an `Nrows x Ncols`
     matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
-    For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in figure [5](#SVD) below.
+    For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in Figure [5](#SVD) below.
     From Figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}">. More in detail, it can be seen that
     matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> has non-vanishing elements only on the main diagonal and how, actually, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> rather than <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> is used in the representation of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">.
 
@@ -602,52 +602,14 @@ Now that we have illustrated this simple example which approaches the procedure 
 
 ## Theory: the Eigenfaces approach
 
-Principal Component Analysis (PCA) is a successful technique used in
-data compression and especially image compression which aims at reducing
-the large dimensionality of the data by removing strongly correlated
-data components and so to describe the data economically.  
-The Eigenfaces approach uses PCA by which it transforms the faces of a
-certain *learning* or *training database* into a small set of
-*eigenfaces* representing the essential features of the dataset. The
-idea behind the Eigenfaces approach is simple and we will now present
-its rationale in an intuitive way.  
-Imagine dealing with a database of two images belonging to two different
-characters \(A\) and \(B\), each in his/her own pose, represented by
-orthogonal vectors of a two-dimensional space. For example, the first
-image, that of character \(A\), is represented by \(a\hat{\imath}_x\),
-where \(a\) is a constant and \(\hat{\imath}_x\) is the unit vector of
-the \(x\)-axis. The second image, that of character \(B\), is
-represented by \(b\hat{\imath}_y\), where \(b\) is a constant and
-\(\hat{\imath}_y\) is the unit vector of the \(y\)-axis.  
-Now, suppose to deal with a new image of one of the two characters in a
-different pose and to be in charge of deciding whether it belongs to
-character \(A\) or \(B\). Also the latter image, as the database ones,
-will be represented by a vector, say \(\underline{v}\). It will be
-essentially contained in the \(xy\) plane, but it could have also
-components along other directions due to the different pose. If we
-consider three-dimensional spaces only, such a vector could have a
-non-vanishing, although low, component along the \(z\)-axis.  
-However, such component does not belong to the space of our knowledge,
-which is limited to the \(xy\) plane, so that it is not useful to the
-recognition and must be ignored. The recognition can be then performed
-by projecting the vector \(\underline{v}\) on the \(xy\) plane. If its
-projection is closer to \(a\hat{\imath}_x\), then the recognition will
-be in favor of \(A\), otherwise of \(B\). More technically, face
-recognition is performed by projecting a test image into the eigenface
-subspace and by classifying the person represented in the test image by
-comparing its projection within the eigenface space with the projections
-the known individuals of the training dataset have.  
-The strong points of the Eigenfaces approach are simplicity and speed.
-The weak point is that the recognition rate decreases under varying pose
-and illumination conditions. Sirovich and Kirby  published, for the
-first time, the use of principal components for human faces
-representation, while Turk and Pentland  used it for face detection and
+Principal Component Analysis (PCA) is a successful technique used in data compression and especially image compression which aims at reducing the large dimensionality of the data by removing strongly correlated data components and so to describe the data economically.  
+The Eigenfaces approach uses PCA by which it transforms the faces of a certain *learning* or *training database* into a small set of *eigenfaces* representing the essential features of the dataset. The idea behind the Eigenfaces approach is simple and we will now present its rationale in an intuitive way. Imagine dealing with a database of two images belonging to two different characters <img src="https://render.githubusercontent.com/render/math?math=A"> and <img src="https://render.githubusercontent.com/render/math?math=B">, each in his/her own pose, represented by orthogonal vectors of a two-dimensional space. For example, the first image, that of character <img src="https://render.githubusercontent.com/render/math?math=A">, is represented by <img src="https://render.githubusercontent.com/render/math?math=a\hat{\imath}_x">, where <img src="https://render.githubusercontent.com/render/math?math=a"> is a constant and <img src="https://render.githubusercontent.com/render/math?math=\hat{\imath}_x"> is the unit vector of the <img src="https://render.githubusercontent.com/render/math?math=x">-axis. The second image, that of character <img src="https://render.githubusercontent.com/render/math?math=B">, is represented by <img src="https://render.githubusercontent.com/render/math?math=b\hat{\imath}_y">, where <img src="https://render.githubusercontent.com/render/math?math=b"> is a constant and <img src="https://render.githubusercontent.com/render/math?math=\hat{\imath}_y"> is the unit vector of the <img src="https://render.githubusercontent.com/render/math?math=y">-axis.  
+Now, suppose to deal with a new image of one of the two characters in a different pose and to be in charge of deciding whether it belongs to character <img src="https://render.githubusercontent.com/render/math?math=A"> or <img src="https://render.githubusercontent.com/render/math?math=B">. Also the latter image, as the database ones, will be represented by a vector, say <img src="https://render.githubusercontent.com/render/math?math=\mathbf{v}">. It will be essentially contained in the <img src="https://render.githubusercontent.com/render/math?math=xy"> plane, but it could have also components along other directions due to the different pose. If we consider three-dimensional spaces only, such a vector could have a non-vanishing, although low, component along the <img src="https://render.githubusercontent.com/render/math?math=z">-axis.  
+However, such component does not belong to the space of our knowledge, which is limited to the <img src="https://render.githubusercontent.com/render/math?math=xy"> plane, so that it is not useful to the recognition and must be ignored. The recognition can be then performed by projecting the vector <img src="https://render.githubusercontent.com/render/math?math=\mathbf{v}"> on the <img src="https://render.githubusercontent.com/render/math?math=xy"> plane. If its projection is closer to <img src="https://render.githubusercontent.com/render/math?math=a\hat{\imath}_x">, then the recognition will be in favor of <img src="https://render.githubusercontent.com/render/math?math=A">, otherwise of <img src="https://render.githubusercontent.com/render/math?math=B">. More technically, face recognition is performed by projecting a test image into the eigenface subspace and by classifying the person represented in the test image by comparing its projection within the eigenface space with the projections the known individuals of the training dataset have.  
+The strong points of the Eigenfaces approach are simplicity and speed. The weak point is that the recognition rate decreases under varying pose and illumination conditions. Sirovich and Kirby  published, for the first time, the use of principal components for human faces representation, while Turk and Pentland used it for face detection and
 recognition.  
-The theory for recognizing faces based on PCA is explained in the eight
-steps below.  
-In the following, we will refer to real matrices so that the superscript
-\(^H\) standing for conjugate transposition will be changed into the
-superscript \(^t\) standing for the only transposition operation.
+The theory for recognizing faces based on PCA is explained in the eight steps below.  
+In the following, we will refer to real matrices so that the superscript <img src="https://render.githubusercontent.com/render/math?math=^H"> standing for conjugate transposition will be changed into the superscript <img src="https://render.githubusercontent.com/render/math?math=^t"> standing for the only transposition operation.
 
 ### Step 1: defining the database matrix
 

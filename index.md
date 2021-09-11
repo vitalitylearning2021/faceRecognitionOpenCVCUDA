@@ -547,16 +547,15 @@ Unfortunately, we do not have the possibility of recalling the details of the th
     
     From the previous equation [\[5\]](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> is an `Nrows x Ncols`
     matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
-    For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in figure [5](#SVD) below:
-    
+    For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in figure [5](#SVD) below.
+    From Figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}">. More in detail, it can be seen that
+    matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> has non-vanishing elements only on the main diagonal and how, actually, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> rather than <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> is used in the representation of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">.
+
   <p align="center">
     <img src="SVD.jpg" width="400" id="SVD">
     <br>
       <em>Figure 5. Illustrating the SVD of a `m x n` matrix `M`, in the case when `m > n`.</em>
   </p>
-
-    From Figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}">. More in detail, it can be seen that
-    matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> has non-vanishing elements only on the main diagonal and how, actually, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> rather than <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> is used in the representation of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">.
 
   - The space for matrices `d_U`, `d_V` and `d_S` is allocated as:
     

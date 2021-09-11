@@ -404,7 +404,7 @@ Unfortunately, we do not have the possibility of recalling the details of the th
         h_A2.ptr<float>(0),h_A2.step * sizeof(float),
         h_A2.cols * sizeof(float),1,cudaMemcpyHostToDevice));
     ```
-    <p align="center" id="printKernel" >
+    <p align="center" id="H2DCopy" >
        <em>Listing 2. Host-to-Device matrix copy.</em>
     </p>    
     
@@ -539,14 +539,14 @@ Unfortunately, we do not have the possibility of recalling the details of the th
     In the previous code, `devInfo`, indeed, is a diagnostic output single-element array of the SVD routine. If its only element is `0`, then `cusolverDnSgesvd()` has been successful. If `devInfo = -i`, with `i` positive, then the `i`-th input parameter (not counting `cuSolverHandle`) is wrong. If `devInfo > 0`, then `cusolverDnSgesvd()` has not reached convergence.  
     In the latter case, it should be taken into account that `cusolverDnSgesvd()` internally uses a *bidiagonalization* approach (namely, the matrix is transformed to a bidiagonal form, having only the main and the first upper diagonals) and `devInfo` provides information on how many super diagonal elements of an intermediate bidiagonal matrix have missed convergence to `0`. Such super diagonal is then stored in an array of `min(Nrows, Ncols) - 1` elements `rWork` as the output of `cusolverDnSgesvd()`.  
     However, the aspects related to the super diagonal are technicalities for experts in numerical computation, so that, in the present example as well as for the full Eigenfaces approach, will be skipped. As a consequence, as provided by `cusolverDnSgesvd()`, we will use `NULL` as `rWork` argument. In this way, `cusolverDnSgesvd()` knows that it must not output such information.  
-    Before launching `cusolverDnSgesvd()`, space for the SVD output must be allocated. It should be recalled that, given a matrix <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}">, `cusolverDnSgesvd()` provides the following factorization:
+    Before launching `cusolverDnSgesvd()`, space for the SVD output must be allocated. It should be recalled that, given a matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">, `cusolverDnSgesvd()` provides the following factorization:
     
     <p align="center">
-      <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}= \underline{\underline{U}}\cdot \underline{\underline{\Sigma}}\cdot \underline{\underline{V}}^H." id="SVD">       [2]
+      <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}= \mathbf{U}\cdot \mathbf{\Sigma}\cdot \mathbf{V}^H." id="SVD">       [2]
     </p>
     
-    From the previous equation [1.5](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{\Sigma}}"> is an `Nrows x Ncols`
-    matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{V}}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\underline{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
+    From the previous equation [1.5](#SVD), <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> is an `Nrows x Ncols`
+    matrix which is zero except for its `min(Nrows, Ncols)` diagonal elements which are called *singular values*. The <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}"> notation is an `Nrows x Nrows` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{u}_m">  are called *left singular vectors*, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> notation is an `Ncols x Ncols` unitary matrix whose columns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{v}_n"> are called *right singular vectors*, and <img src="https://render.githubusercontent.com/render/math?math=^H"> denotes conjugate transposition.  
     For the case we are dealing with, the involved covariance matrix is real so that the conjugate does not operate. The SVD of a matrix is illustrated in figure [5](#SVD) below:
     
   <p align="center">
@@ -555,16 +555,10 @@ Unfortunately, we do not have the possibility of recalling the details of the th
       <em>Figure 5. Illustrating the SVD of a `m x n` matrix `M`, in the case when `m > n`.</em>
   </p>
 
-    From figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{A}}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\underline{\underline{U}}">
-    \(\underline{\underline{\Sigma}}\) and
-    \(\underline{\underline{V}}\). More in detail, it can be seen that
-    matrix \(\underline{\underline{\Sigma}}\) has non-vanishing elements
-    only on the main diagonal and how, actually,
-    \(\underline{\underline{V}}^H\) rather than
-    \(\underline{\underline{V}}\) is used in the representation of
-    \(\underline{\underline{A}}\).
+    From figure [5](#SVD), it can be seen, thanks to its SVD representation, how matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> is factored in terms of matrices <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">,  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}">. More in detail, it can be seen that
+    matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> has non-vanishing elements only on the main diagonal and how, actually, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> rather than <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> is used in the representation of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">.
 
-13. The space for matrices `d_U`, `d_V` and `d_S` is allocated as:
+  - The space for matrices `d_U`, `d_V` and `d_S` is allocated as:
     
     ``` c++
     float *d_U; 
@@ -576,13 +570,9 @@ Unfortunately, we do not have the possibility of recalling the details of the th
                 min(Nrows, Ncols) * sizeof(float)));    
     ```
     
-    In the allocations above, we observe that being only `min(Nrows,
-    Ncols)` elements of \(\underline{\underline{\Sigma}}\) of different
-    from `0`, then `d_S` contains only `min(Nrows, Ncols)` elements of
-    `float` type.
+    In the allocations above, we observe that being only `min(Nrows, Ncols)` elements of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> of different from `0`, then `d_S` contains only `min(Nrows, Ncols)` elements of `float` type.
 
-14. Let us finally discuss the invocation of `cusolverDnSgesvd()`,
-    namely:
+  - Let us finally discuss the invocation of `cusolverDnSgesvd()`, namely:
     
     ``` c++
     cusolverDnSgesvd(cuSolverHandle, 'A', 'A', Nrows, Ncols, 
@@ -590,45 +580,14 @@ Unfortunately, we do not have the possibility of recalling the details of the th
             Ncols, workArray, workSize, NULL, devInfo);    
     ```
     
-    Its parameters have been almost completely eviscerated. It remains
-    to clarify that the routine returns \(\underline{\underline{V}}^H\)
-    in `d_V` and not \(\underline{\underline{V}}\).  
-    It should also be mentioned that the presence of the two `'A'`s as
-    arguments of `cusolverDnSgesvd()` indicates that we desire a full
-    knowledge of matrices \(\underline{\underline{U}}\) and
-    \(\underline{\underline{V}}^H\). There is also the possibility to
-    evaluate a limited number of columns of
-    \(\underline{\underline{U}}\) or of rows of
-    \(\underline{\underline{V}}^H\) or to completely avoid their
-    calculations.  
-    Finally, it should be recalled that, as for cuBLAS, the routines of
-    the cuSOLVER library assume the matrices stored column-wise. This
-    can be a problem since, as we already know, the matrices in OpenCV
-    are stored row-wise. Fortunately, the matrix `d_Cov` at hand is
-    symmetric.  
-    The last parameter to clarify and that deserves attention is the
-    so-called *leading dimension* (LDA) of \(\underline{\underline{A}}\)
-    which should be larger than or equal to `Nrows`. The value of the
-    leading dimension, in the case of our interest, is `d_Cov.step1()`.
-    This value represents the overall number of elements of each row of
-    matrix `d_Cov`, padding included.  
-    Note that it differs from `d_Cov.step()` since the latter represents
-    the number of bytes of each row, padding included. In other words,
-    `d_Cov.step1() = d_Cov.step() / sizeof(float)`. To understand the
-    concept of leading dimension of a matrix, suppose to have a
-    `100x100` matrix `M` of size `100x100`. In the case we are
-    interested in the calculation of the SVD of the whole matrix, we
-    should use `LDA = 100`, `Nrows = 100` and `Ncols = 100` in the
-    `cusolverDnSgesvd()` routine.  
-    Now, suppose we are interested to compute the SVD of the submatrix
-    `M(1 : 90, 1 : 100)`. In this case, we have still `LDA = 100` and
-    `Ncols = 100`, but `Nrows = 90`. Indeed, the LDA represents the
-    distance in memory between elements of two consecutive columns which
-    have the same row index.
+    Its parameters have been almost completely eviscerated. It remains to clarify that the routine returns <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> in `d_V` and not <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}">.  
+    It should also be mentioned that the presence of the two `'A'`s as arguments of `cusolverDnSgesvd()` indicates that we desire a full knowledge of matrices <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H">. There is also the possibility to evaluate a limited number of columns of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}"> or of rows of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}^H"> or to completely avoid their calculations.  
+    Finally, it should be recalled that, as for cuBLAS, the routines of the cuSOLVER library assume the matrices stored column-wise. This can be a problem since, as we already know, the matrices in OpenCV are stored row-wise. Fortunately, the matrix `d_Cov` at hand is symmetric.  
+    The last parameter to clarify and that deserves attention is the so-called *leading dimension* (LDA) of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> which should be larger than or equal to `Nrows`. The value of the leading dimension, in the case of our interest, is `d_Cov.step1()`. This value represents the overall number of elements of each row of matrix `d_Cov`, padding included.  
+    Note that it differs from `d_Cov.step()` since the latter represents the number of bytes of each row, padding included. In other words, `d_Cov.step1() = d_Cov.step() / sizeof(float)`. To understand the concept of leading dimension of a matrix, suppose to have a `100x100` matrix `M` of size `100x100`. In the case we are interested in the calculation of the SVD of the whole matrix, we should use `LDA = 100`, `Nrows = 100` and `Ncols = 100` in the `cusolverDnSgesvd()` routine.  
+    Now, suppose we are interested to compute the SVD of the submatrix `M(1 : 90, 1 : 100)`. In this case, we have still `LDA = 100` and `Ncols = 100`, but `Nrows = 90`. Indeed, the LDA represents the distance in memory between elements of two consecutive columns which have the same row index.
 
-15. At last, the following code shows the execution of
-    `cusolverDnSgesvd()`. The value of `devInfo` is checked to verify
-    whether the execution has been successful or not:
+  - At last, the following code shows the execution of `cusolverDnSgesvd()`. The value of `devInfo` is checked to verify whether the execution has been successful or not:
     
     ``` c++
     int devInfo_h = 0; 
@@ -638,14 +597,9 @@ Unfortunately, we do not have the possibility of recalling the details of the th
             std::cout << "Unsuccessful SVD execution\n\n"; 
     ```
     
-    It is worth underlining that `cusolverDnSgesvd()` requires that
-    `Nrows >= Ncols`. Fortunately, such a condition is met in the
-    considered example.
+    It is worth underlining that `cusolverDnSgesvd()` requires that `Nrows >= Ncols`. Fortunately, such a condition is met in the considered example.
 
-Now that we have illustrated this simple example which approaches the
-procedure to be implemented for face recognition, let us jot down the
-theoretical bases of the Eigenfaces method. In the following next
-Section, the steps in the present example will be also clearer.
+Now that we have illustrated this simple example which approaches the procedure to be implemented for face recognition, let us jot down the theoretical bases of the Eigenfaces method. In the following next Section, the steps in the present example will be also clearer.
 
 ## Theory: the Eigenfaces approach
 

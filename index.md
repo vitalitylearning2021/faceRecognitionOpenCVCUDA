@@ -648,7 +648,7 @@ In other words, the pixels of the average image are the averages of the correspo
 We now need to purge the training dataset images of the average image. This amounts at subtracting the row <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> in equation [\[5\]](#rowX) from the rows of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> obtaining:
 
 <p align="center">
-  <img src="equation_7.png" width="250" id="xxx">.     [7]
+  <img src="equation_7.png" width="350" id="xxx">.     [7]
 </p>
 
 Also, the need for this step has been already anticipated in the second example using OpenCV and CUDA above.

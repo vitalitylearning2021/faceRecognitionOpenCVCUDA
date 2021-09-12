@@ -645,10 +645,7 @@ In other words, the pixels of the average image are the averages of the correspo
 
 ### Step 3: removing the average image from the database
 
-We now need to purge the training dataset images of the average image.
-This amounts at subtracting the row \(\underline{X}\) in equation
-([\[rowX\]](#rowX)) from the rows of matrix
-\(\underline{\underline{A}}\) obtaining:
+We now need to purge the training dataset images of the average image. This amounts at subtracting the row <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> in equation [\[5\]](#rowX) from the rows of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> obtaining:
 
 \[\widetilde{\underline{\underline{A}}}=
   \left[ {\begin{array}{cccc}

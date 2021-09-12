@@ -616,21 +616,14 @@ In the following, we will refer to real matrices so that the superscript <img sr
 The first step consists of loading a training database of <img src="https://render.githubusercontent.com/render/math?math=T"> face images. The images must have all the same size <img src="https://render.githubusercontent.com/render/math?math=M\times N">. Each 2D facial image is reshaped as 1-D vector. In this way, the <img src="https://render.githubusercontent.com/render/math?math=t">-th image becomes:
 
 <p align="center">
-  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}_t=\left[p_1^{(t)} \;p_2^{(t)} \; \ldots \; p_{MN}^{(t)}\right].." id="nearestNeighborInterpolatingFunction">       [3]
+  <img src="equation_3.png" width="200" id="matrixFaceRecognition">     [3]
 </p>
 
 At this point, the database matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> can be formed:
 
 <p align="center">
-  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}=
-  \left[ {\begin{array}{cccc}
-   p_1^{(1)} & p_2^{(1)} & \ldots & p_{MN}^{(1)}\\
-   p_1^{(2)} & p_2^{(2)} & \ldots & p_{MN}^{(2)}\\
-   \ldots & \ldots & \ldots & \ldots\\
-   p_1^{(T)} & p_2^{(T)} & \ldots & p_{MN}^{(T)}\\
-  \end{array} } \right]." id="nearestNeighborInterpolatingFunction">       [4]
+  <img src="equation_4.png" width="200" id="matrixFaceRecognition">     [4]
 </p>
-
 
 In particular, a <img src="https://render.githubusercontent.com/render/math?math=T=M\times N"> matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">  is filled so that the <img src="https://render.githubusercontent.com/render/math?math=t">-th row of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> equals <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}_t">.
 

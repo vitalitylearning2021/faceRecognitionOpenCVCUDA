@@ -638,7 +638,7 @@ The second step amounts at computing the average image <img src="https://render.
 where
 
 <p align="center">
-  <img src="equation_6.png" width="150" id="xxx">.     [6]
+  <img src="equation_6.png" width="130" id="xxx">.     [6]
 </p>
 
 In other words, the pixels of the average image are the averages of the corresponding pixels in the training dataset images. The average image can be computed by averaging the columns of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">. The need for performing such operation has been already anticipated in the second example using OpenCV and CUDA illustrated above.

@@ -629,22 +629,19 @@ In particular, a <img src="https://render.githubusercontent.com/render/math?math
 
 ### Step 2: computing the average matrix
 
-The second step amounts at computing the average image \(\underline{X}\)
-as:
+The second step amounts at computing the average image <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> as:
 
-\[\label{rowX}
-    \underline{X}=[p_1 \; p_2 \; \ldots \; p_{MN}],\]
+<p align="center">
+  <img src="equation_5.png" width="200" id="rowX">,     [5]
+</p>
 
 where
 
-\[p_k=\frac{1}{T}\sum_{t=1}^{T}p_k^{(t)}.\]
+<p align="center">
+  <img src="equation_6.png" width="200" id="xxx">.     [6]
+</p>
 
-In other words, the pixels of the average image are the averages of the
-corresponding pixels in the training dataset images. The average image
-can be computed by averaging the columns of matrix
-\(\underline{\underline{A}}\). The need for performing such operation
-has been already anticipated in the second example using OpenCV and CUDA
-illustrated above.
+In other words, the pixels of the average image are the averages of the corresponding pixels in the training dataset images. The average image can be computed by averaging the columns of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">. The need for performing such operation has been already anticipated in the second example using OpenCV and CUDA illustrated above.
 
 ### Step 3: removing the average image from the database
 

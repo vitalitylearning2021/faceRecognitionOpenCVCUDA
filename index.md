@@ -647,21 +647,11 @@ In other words, the pixels of the average image are the averages of the correspo
 
 We now need to purge the training dataset images of the average image. This amounts at subtracting the row <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> in equation [\[5\]](#rowX) from the rows of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> obtaining:
 
-\[\widetilde{\underline{\underline{A}}}=
-  \left[ {\begin{array}{cccc}
-   p_1^{(1)}-p_1 & p_2^{(1)}-p_2 & \ldots & p_{MN}^{(1)}-p_{MN}\\
-   p_1^{(2)}-p_1 & p_2^{(2)}-p_2 & \ldots & p_{MN}^{(2)}-p_{MN}\\
-   \ldots & \ldots & \ldots & \ldots\\
-   p_1^{(T)}-p_1 & p_2^{(T)}-p_2 & \ldots & p_{MN}^{(T)}-p_{MN}\\
-  \end{array} } \right]=  \left[ {\begin{array}{cccc}
-   \widetilde{p}_1^{(1)} & \widetilde{p}_2^{(1)} & \ldots & \widetilde{p}_{MN}^{(1)}\\
-   \widetilde{p}_1^{(2)} & \widetilde{p}_2^{(2)} & \ldots & \widetilde{p}_{MN}^{(2)}\\
-   \ldots & \ldots & \ldots & \ldots\\
-   \widetilde{p}_1^{(T)} & \widetilde{p}_2^{(T)} & \ldots & \widetilde{p}_{MN}^{(T)}\\
-  \end{array} } \right].\]
+<p align="center">
+  <img src="equation_7.png" width="130" id="xxx">.     [7]
+</p>
 
-Also, the need for this step has been already anticipated in the second
-example using OpenCV and CUDA above.
+Also, the need for this step has been already anticipated in the second example using OpenCV and CUDA above.
 
 ### Step 4: computing the eigenvectors of the covariance matrix
 

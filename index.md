@@ -613,27 +613,26 @@ In the following, we will refer to real matrices so that the superscript <img sr
 
 ### Step 1: defining the database matrix
 
-The first step consists of loading a training database of \(T\) face
-images. The images must have all the same size \(M\times N\). Each 2D
-facial image is reshaped as 1-D vector. In this way, the \(t\)-th image
-becomes:
+The first step consists of loading a training database of <img src="https://render.githubusercontent.com/render/math?math=T"> face images. The images must have all the same size <img src="https://render.githubusercontent.com/render/math?math=M\times N">. Each 2D facial image is reshaped as 1-D vector. In this way, the <img src="https://render.githubusercontent.com/render/math?math=t">-th image becomes:
 
-\[\underline{X}_t=\left[p_1^{(t)} \;p_2^{(t)} \; \ldots \; p_{MN}^{(t)}\right].\]
+<p align="center">
+  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}_t=\left[p_1^{(t)} \;p_2^{(t)} \; \ldots \; p_{MN}^{(t)}\right].." id="nearestNeighborInterpolatingFunction">       [3]
+</p>
 
-At this point, the database matrix \(\underline{\underline{A}}\) can be
-formed:
+At this point, the database matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> can be formed:
 
-\[\underline{\underline{A}}=
+<p align="center">
+  <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}=
   \left[ {\begin{array}{cccc}
    p_1^{(1)} & p_2^{(1)} & \ldots & p_{MN}^{(1)}\\
    p_1^{(2)} & p_2^{(2)} & \ldots & p_{MN}^{(2)}\\
    \ldots & \ldots & \ldots & \ldots\\
    p_1^{(T)} & p_2^{(T)} & \ldots & p_{MN}^{(T)}\\
-  \end{array} } \right].\]
+  \end{array} } \right]." id="nearestNeighborInterpolatingFunction">       [4]
+</p>
 
-In particular, a \(T=M\times N\) matrix \(\underline{\underline{A}}\) is
-filled so that the \(t\)-th row of \(\underline{\underline{A}}\) equals
-\(\underline{X}_t\).
+
+In particular, a <img src="https://render.githubusercontent.com/render/math?math=T=M\times N"> matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}">  is filled so that the <img src="https://render.githubusercontent.com/render/math?math=t">-th row of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> equals <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}_t">.
 
 ### Step 2: computing the average matrix
 

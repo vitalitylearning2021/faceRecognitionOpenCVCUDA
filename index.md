@@ -655,8 +655,7 @@ Also, the need for this step has been already anticipated in the second example 
 
 ### Step 4: computing the eigenvectors of the covariance matrix
 
-1.  Once purged the initial database of the average image, the
-    covariance matrix \(\underline{\underline{C}}\) is defined as :
+  - Once purged the initial database of the average image, the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> is defined as :
     
     \[\underline{\underline{C}}=\frac{\widetilde{\underline{\underline{A}}} \cdot \widetilde{\underline{\underline{A}}}^t}{T}.\]
     

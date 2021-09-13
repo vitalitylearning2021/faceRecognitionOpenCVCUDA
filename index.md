@@ -648,7 +648,7 @@ In other words, the pixels of the average image are the averages of the correspo
 We now need to purge the training dataset images of the average image. This amounts at subtracting the row <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> in equation [\[5\]](#rowX) from the rows of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}"> obtaining:
 
 <p align="center">
-  <img src="equation_7.png" width="400" id="xxx">.     [7]
+  <img src="equation_7.png" width="400" id="xxx">     [7]
 </p>
 
 Also, the need for this step has been already anticipated in the second example using OpenCV and CUDA above.
@@ -657,46 +657,40 @@ Also, the need for this step has been already anticipated in the second example 
 
   - Once purged the initial database of the average image, the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> is defined as :
     
-    \[\underline{\underline{C}}=\frac{\widetilde{\underline{\underline{A}}} \cdot \widetilde{\underline{\underline{A}}}^t}{T}.\]
-    
-    It is now necessary to compute the eigenvalues and the eigenvectors
-    of the covariance matrix \(\underline{\underline{C}}\). The
-    eigenvalue problem for matrix \(\underline{\underline{C}}\) is the
-    following:
-    
-    \[\label{eig}
-        \frac{\widetilde{\underline{\underline{A}}}}{\sqrt{T}}\cdot \frac{\widetilde{\underline{\underline{A}}}^t}{\sqrt{T}}\cdot \widetilde{\underline{\underline{W}}} = \widetilde{\underline{\underline{\Lambda}}}\cdot \widetilde{\underline{\underline{W}}},\]
-    
-    where the columns of \(\widetilde{\underline{\underline{W}}}\) are
-    the eigenvectors and \(\widetilde{\underline{\underline{\Lambda}}}\)
-    is a matrix that is zero except for its diagonal which contains the
-    eigenvalues.
+    <p align="center">
+       <img src="equation_8.png" width="400" id="xxx">     [8]
+    </p>
 
-2.  Let us now introduce the SVD of
-    \(\widetilde{\underline{\underline{A}}}/\sqrt{T}\):
+    It is now necessary to compute the eigenvalues and the eigenvectors of the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}">. The
+    eigenvalue problem for matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> is the following:
     
-    \[\label{SVD2}
-            \frac{\widetilde{\underline{\underline{A}}}}{\sqrt{T}}=\widetilde{\underline{\underline{U}}}\cdot \widetilde{\underline{\underline{\Sigma}}}\cdot \widetilde{\underline{\underline{V}}}^H,\]
-    
-    where \(\widetilde{\underline{\underline{U}}}\),
-    \(\widetilde{\underline{\underline{\Sigma}}}\) and
-    \(\widetilde{\underline{\underline{V}}}\) have the same meaning as
-    in equation ([1.5](#SVD)).
+    <p align="center">
+       <img src="equation_9.png" width="400" id="eig">     [9]
+    </p>
 
-3.  If we now substitute equation ([\[SVD2\]](#SVD2)) in equation
-    ([\[eig\]](#eig)), we have:
+    where the columns of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{W}"> are the eigenvectors and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Lambda}"> is a matrix that is zero except for its diagonal which contains the eigenvalues.
+
+  - Let us now introduce the SVD of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{A}/\sqrt{T}">:
     
-    \[\label{SVD3}
-            \frac{\widetilde{\underline{\underline{A}}}}{\sqrt{T}}\cdot \frac{\widetilde{\underline{\underline{A}}}^t}{\sqrt{T}}=\widetilde{\underline{\underline{U}}}\cdot \widetilde{\underline{\underline{\Sigma}}}\cdot \underbrace{\widetilde{\underline{\underline{V}}}^t \widetilde{\underline{\underline{V}}}}_{\underline{\underline{I}}}\cdot \widetilde{\underline{\underline{\Sigma}}}^t\cdot \widetilde{\underline{\underline{U}}}^t.\]
+    <p align="center">
+       <img src="equation_10.png" width="400" id="SVD2">     [10]
+    </p>
+
+    where <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> have the same meaning as in equation [1.5](#SVD).
+
+3.  If we now substitute equation [\[SVD2\]](#SVD2) in equation [\[eig\]](#eig), we have:
     
-    Now, equation ([\[SVD3\]](#SVD3)) can be rewritten as:
+    <p align="center">
+       <img src="equation_11.png" width="400" id="SVD3">     [11]
+    </p>
+
+    Now, equation [\[SVD3\]](#SVD3) can be rewritten as:
     
-    \[\label{SVD3}
-            \underline{\underline{C}}=\frac{\widetilde{\underline{\underline{A}}}}{\sqrt{T}}\cdot \frac{\widetilde{\underline{\underline{A}}}^t}{\sqrt{T}}=\widetilde{\underline{\underline{U}}}\cdot \widetilde{\underline{\underline{\Sigma}}}^2\cdot \widetilde{\underline{\underline{U}}}^t,\]
+    <p align="center">
+       <img src="equation_12.png" width="400" id="SVD3">     [12]
+    </p>
     
-    where \(\widetilde{\underline{\underline{\Sigma}}}^2\) is a diagonal
-    matrix whose diagonal contains the squared singular values of
-    \(\widetilde{\underline{\underline{A}}}/\sqrt{T}\).  
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}^2"> is a diagonal matrix whose diagonal contains the squared singular values of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">.  
     According to equation ([\[SVD3\]](#SVD3)), the eigenvectors of
     \(\underline{\underline{C}}\) can be computed as the left singular
     vectors of \(\widetilde{\underline{\underline{A}}}/\sqrt{T}\), while

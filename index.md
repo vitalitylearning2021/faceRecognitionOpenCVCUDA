@@ -632,7 +632,7 @@ In particular, a <img src="https://render.githubusercontent.com/render/math?math
 The second step amounts at computing the average image <img src="https://render.githubusercontent.com/render/math?math=\mathbf{X}"> as:
 
 <p align="center">
-  <img src="equation_5.png" width="180" id="rowX">,     [5]
+  <img src="equation_5.png" width="180" id="SVD_eq5">,     [5]
 </p>
 
 where
@@ -676,7 +676,7 @@ Also, the need for this step has been already anticipated in the second example 
        <img src="equation_10.png" width="200" id="SVD2">     [10]
     </p>
 
-    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [5](#SVD).
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [5](#SVD_eq5).
 
 3.  If we now substitute equation [\[10\]](#SVD2) in equation [\[eig\]](#eig), we have:
     

@@ -690,7 +690,7 @@ Also, the need for this step has been already anticipated in the second example 
        <img src="equation_12.png" width="200" id="SVD3">     [12]
     </p>
     
-    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}^2"> is a diagonal matrix whose diagonal contains the squared singular values of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">. According to equation ([\[12\]](#SVD3)), the eigenvectors of
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}^2"> is a diagonal matrix whose diagonal contains the squared singular values of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">. According to equation [\[12\]](#SVD3), the eigenvectors of
     <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> can be computed as the left singular vectors of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">, while its eigenvalues as the square of the singular values of
     <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">.
 

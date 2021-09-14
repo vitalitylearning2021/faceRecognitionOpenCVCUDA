@@ -707,21 +707,10 @@ where, when defining matrix <img src="https://render.githubusercontent.com/rende
 
 ### Step 6: computing the feature vectors of the database images
 
-It is now necessary to compute the projections of each image of the
-purged database \(\widetilde{\underline{\underline{A}}}\) over the
-retained eigenvectors of the covariance matrix.  
-To this end, let us denote by \(\widetilde{\underline{u}}_L^{(k)}\) the
-\(k\)-th eigenvector of \(\underline{\underline{C}}\), namely, the
-\(k\)-th column of \(\widetilde{\underline{\underline{U}}}_L\), and by
-\(\widetilde{\underline{a}}^{(t)}\) the \(t\)-th row of matrix
-\(\widetilde{\underline{\underline{A}}}\), namely, the \(t\)-th purged
-image. Then, the component of \(\widetilde{\underline{a}}^{(t)}\) over
-\(\widetilde{\underline{u}}_L^{(k)}\) can be written as the scalar
-product
-\(\widetilde{\underline{a}}^{(t)} \cdot \widetilde{\underline{u}}_L^{(k)}\).  
-Let us now form a matrix \(\underline{\underline{F}}\), known as the
-*feature matrix*. Matrix \(\underline{\underline{F}}\) can be computed
-as:
+It is now necessary to compute the projections of each image of the purged database <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}"> over the retained eigenvectors of the covariance matrix.  
+To this end, let us denote by <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{u}}_L^{(k)}"> the <img src="https://render.githubusercontent.com/render/math?math=k">-th eigenvector of \(\underline{\underline{C}}\), namely, the <img src="https://render.githubusercontent.com/render/math?math=k">-th column of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L">, and by
+<img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)}"> the <img src="https://render.githubusercontent.com/render/math?math=k">-th row of matrix <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}">, namely, the <img src="https://render.githubusercontent.com/render/math?math=t">-th purged image. Then, the component of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)}"> over <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{u}}_L^{(k)}"> can be written as the scalar product <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)} \cdot \widetilde{\mathbf{u}}_L^{(k)}">.  
+Let us now form a matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">, known as the *feature matrix*. Matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}"> can be computed as:
 
 \[\label{featureMatrix}
 \underline{\underline{F}} =  \widetilde{\underline{\underline{U}}}_L^t\cdot \widetilde{\underline{\underline{A}}}^t\]

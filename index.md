@@ -676,15 +676,15 @@ Also, the need for this step has been already anticipated in the second example 
        <img src="equation_10.png" width="200" id="SVD2">     [10]
     </p>
 
-    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [5](#SVD_eq5).
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [\[5\]](#SVD_eq5).
 
 3.  If we now substitute equation [\[10\]](#SVD2) in equation [\[eig\]](#eig), we have:
     
     <p align="center">
-       <img src="equation_11.png" width="400" id="SVD3">     [11]
+       <img src="equation_11.png" width="200" id="SVD3">     [11]
     </p>
 
-    Now, equation [\[SVD3\]](#SVD3) can be rewritten as:
+    Now, equation [\[12\]](#SVD3) can be rewritten as:
     
     <p align="center">
        <img src="equation_12.png" width="400" id="SVD3">     [12]

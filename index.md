@@ -700,7 +700,7 @@ At this point, it is needed to establish how many eigenvectors of the covariance
 Cutting the number of eigenvectors means retaining only the first <img src="https://render.githubusercontent.com/render/math?math=L"> columns of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, so that, from now on, instead of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, we will consider the following matrix:
 
 <p align="center">
-    <img src="equation_13.png" width="200" id="xxx">     [13]
+    <img src="equation_13.png" width="130" id="xxx">     [13]
 </p>
     
 where, when defining matrix <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L">, we have used a Matlab-like symbolism.

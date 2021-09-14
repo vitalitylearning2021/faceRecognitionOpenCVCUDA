@@ -699,8 +699,10 @@ Also, the need for this step has been already anticipated in the second example 
 At this point, it is needed to establish how many eigenvectors of the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> useful for the face recognition we need to retain. This is a technicality we will not deal with in the present chapter since our purpose is to illustrate the use of the programming tools rather than the technique *per se*. In other words, the criterion by which cutting out the eigenvectors, say <img src="https://render.githubusercontent.com/render/math?math=L">, will not be discussed and the number of eigenvectors will be arbitrarily chosen.  
 Cutting the number of eigenvectors means retaining only the first <img src="https://render.githubusercontent.com/render/math?math=L"> columns of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, so that, from now on, instead of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, we will consider the following matrix:
 
-\[\widetilde{\underline{\underline{U}}}_L=\widetilde{\underline{\underline{U}}}(:, 1:L),\]
-
+<p align="center">
+    <img src="equation_13.png" width="200" id="xxx">     [13]
+</p>
+    
 where, when defining matrix <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L">, we have used a Matlab-like symbolism.
 
 ### Step 6: computing the feature vectors of the database images

@@ -658,7 +658,7 @@ Also, the need for this step has been already anticipated in the second example 
   - Once purged the initial database of the average image, the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> is defined as :
     
     <p align="center">
-       <img src="equation_8.png" width="200" id="xxx">     [8]
+       <img src="equation_8.png" width="150" id="xxx">     [8]
     </p>
 
     It is now necessary to compute the eigenvalues and the eigenvectors of the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}">. The
@@ -673,12 +673,12 @@ Also, the need for this step has been already anticipated in the second example 
   - Let us now introduce the SVD of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">:
     
     <p align="center">
-       <img src="equation_10.png" width="400" id="SVD2">     [10]
+       <img src="equation_10.png" width="200" id="SVD2">     [10]
     </p>
 
-    where <img src="https://render.githubusercontent.com/render/math?math=\mathbf{U}">, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Sigma}"> and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{V}"> have the same meaning as in equation [1.5](#SVD).
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [5](#SVD).
 
-3.  If we now substitute equation [\[SVD2\]](#SVD2) in equation [\[eig\]](#eig), we have:
+3.  If we now substitute equation [\[10\]](#SVD2) in equation [\[eig\]](#eig), we have:
     
     <p align="center">
        <img src="equation_11.png" width="400" id="SVD3">     [11]

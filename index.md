@@ -712,14 +712,12 @@ To this end, let us denote by <img src="https://render.githubusercontent.com/ren
 <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)}"> the <img src="https://render.githubusercontent.com/render/math?math=k">-th row of matrix <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}">, namely, the <img src="https://render.githubusercontent.com/render/math?math=t">-th purged image. Then, the component of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)}"> over <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{u}}_L^{(k)}"> can be written as the scalar product <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{a}}^{(t)} \cdot \widetilde{\mathbf{u}}_L^{(k)}">.  
 Let us now form a matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">, known as the *feature matrix*. Matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}"> can be computed as:
 
-\[\label{featureMatrix}
-\underline{\underline{F}} =  \widetilde{\underline{\underline{U}}}_L^t\cdot \widetilde{\underline{\underline{A}}}^t\]
+<p align="center">
+    <img src="equation_14.png" width="130" id="featureMatrix">     [14]
+</p>
 
-The matrix \(\underline{\underline{F}}\) is of size \(L\times T\) and
-its elements are all the components of the purged images forming the
-rows of matrix \(\widetilde{\underline{\underline{A}}}\) over the basis
-vectors formed by the columns of
-\(\widetilde{\underline{\underline{U}}}_L\).
+
+The matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}"> is of size <img src="https://render.githubusercontent.com/render/math?math=L\times T"> and its elements are all the components of the purged images forming the rows of matrix <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}"> over the basis vectors formed by the columns of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L">.
 
 ### Step 7: computing the feature vector of the test image
 

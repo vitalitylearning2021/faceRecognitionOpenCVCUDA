@@ -678,24 +678,21 @@ Also, the need for this step has been already anticipated in the second example 
 
     where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}">, <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}"> and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{V}}"> have the same meaning as in equation [\[5\]](#SVD_eq5).
 
-3.  If we now substitute equation [\[10\]](#SVD2) in equation [\[eig\]](#eig), we have:
+  - If we now substitute equation [\[10\]](#SVD2) in equation [\[9\]](#eig), we have:
     
     <p align="center">
-       <img src="equation_11.png" width="200" id="SVD3">     [11]
+       <img src="equation_11.png" width="250" id="SVD3">     [11]
     </p>
 
     Now, equation [\[12\]](#SVD3) can be rewritten as:
     
     <p align="center">
-       <img src="equation_12.png" width="400" id="SVD3">     [12]
+       <img src="equation_12.png" width="200" id="SVD3">     [12]
     </p>
     
-    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}^2"> is a diagonal matrix whose diagonal contains the squared singular values of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">.  
-    According to equation ([\[SVD3\]](#SVD3)), the eigenvectors of
-    \(\underline{\underline{C}}\) can be computed as the left singular
-    vectors of \(\widetilde{\underline{\underline{A}}}/\sqrt{T}\), while
-    its eigenvalues as the square of the singular values of
-    \(\widetilde{\underline{\underline{A}}}/\sqrt{T}\).
+    where <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Sigma}}^2"> is a diagonal matrix whose diagonal contains the squared singular values of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">. According to equation ([\[12\]](#SVD3)), the eigenvectors of
+    <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> can be computed as the left singular vectors of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">, while its eigenvalues as the square of the singular values of
+    <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">.
 
 ### Step 5: selecting the eigenvectors useful for recognition
 

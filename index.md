@@ -713,7 +713,7 @@ To this end, let us denote by <img src="https://render.githubusercontent.com/ren
 Let us now form a matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">, known as the *feature matrix*. Matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}"> can be computed as:
 
 <p align="center">
-    <img src="equation_14.png" width="130" id="featureMatrix">     [14]
+    <img src="equation_14.png" width="120" id="featureMatrix">     [14]
 </p>
 
 

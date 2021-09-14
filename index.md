@@ -658,7 +658,7 @@ Also, the need for this step has been already anticipated in the second example 
   - Once purged the initial database of the average image, the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}"> is defined as :
     
     <p align="center">
-       <img src="equation_8.png" width="150" id="xxx">     [8]
+       <img src="equation_8.png" width="120" id="xxx">     [8]
     </p>
 
     It is now necessary to compute the eigenvalues and the eigenvectors of the covariance matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{C}">. The
@@ -668,7 +668,7 @@ Also, the need for this step has been already anticipated in the second example 
        <img src="equation_9.png" width="200" id="eig">     [9]
     </p>
 
-    where the columns of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{W}"> are the eigenvectors and <img src="https://render.githubusercontent.com/render/math?math=\mathbf{\Lambda}"> is a matrix that is zero except for its diagonal which contains the eigenvalues.
+    where the columns of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{W}}"> are the eigenvectors and <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\Lambda}}"> is a matrix that is zero except for its diagonal which contains the eigenvalues.
 
   - Let us now introduce the SVD of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">:
     

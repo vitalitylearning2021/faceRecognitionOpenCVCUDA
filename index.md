@@ -736,7 +736,7 @@ Its features can be evaluated, as for those of the database, by scalar products 
 It is now time to answer the question on which database subject the test image represents. This can be done by comparing the feature vector of the test image <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}"> with the feature vectors of the database images represented by the columns of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">. In other words, on denoting by <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}^{(t)}"> the <img src="https://render.githubusercontent.com/render/math?math=t">-th column of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">, the following Euclidean distances are computed:
 
 <p align="center">
-    <img src="equation_16.png" width="120" id="normFR">     [16]
+    <img src="equation_16.png" width="200" id="normFR">     [16]
 </p>
 
 The subject the test image represents will be the subject corresponding to the image with <img src="https://render.githubusercontent.com/render/math?math=t_{min}">, where <img src="https://render.githubusercontent.com/render/math?math=t_{min}"> is the index minimizing the sequence <img src="https://render.githubusercontent.com/render/math?math=d_t">, <img src="https://render.githubusercontent.com/render/math?math=t=1,\ldots,T">.  

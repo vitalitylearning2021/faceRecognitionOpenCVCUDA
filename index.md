@@ -733,24 +733,14 @@ Its features can be evaluated, as for those of the database, by scalar products 
 
 ### Step 8: face recognition
 
-It is now time to answer the question on which database subject the test
-image represents. This can be done by comparing the feature vector of
-the test image \(\underline{f}\) with the feature vectors of the
-database images represented by the columns of
-\(\underline{\underline{F}}\). In other words, on denoting by
-\(\underline{f}^{(t)}\) the \(t\)-th column of matrix
-\(\underline{\underline{F}}\), the following Euclidean distances are
-computed:
+It is now time to answer the question on which database subject the test image represents. This can be done by comparing the feature vector of the test image <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}"> with the feature vectors of the database images represented by the columns of <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">. In other words, on denoting by <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}^{(t)}"> the <img src="https://render.githubusercontent.com/render/math?math=t">-th column of matrix <img src="https://render.githubusercontent.com/render/math?math=\mathbf{F}">, the following Euclidean distances are computed:
 
-\[\label{normFR}
-d_t=\lVert \underline{f}^{(t)} - \underline{f}\lVert, \;\; t=1,\ldots,T.\]
+<p align="center">
+    <img src="equation_16.png" width="120" id="normFR">     [16]
+</p>
 
-The subject the test image represents will be the subject corresponding
-to the image with \(t_{min}\), where \(t_{min}\) is the index minimizing
-the sequence \(d_t\), \(t=1,\ldots,T\).  
-Once discussed the theory behind the Eigenface approach, in the next
-section, we will illustrate its implementation using OpenCV accelerated
-by CUDA.
+The subject the test image represents will be the subject corresponding to the image with <img src="https://render.githubusercontent.com/render/math?math=t_{min}">, where <img src="https://render.githubusercontent.com/render/math?math=t_{min}"> is the index minimizing the sequence <img src="https://render.githubusercontent.com/render/math?math=d_t">, <img src="https://render.githubusercontent.com/render/math?math=t=1,\ldots,T">.  
+Once discussed the theory behind the Eigenface approach, in the next section, we will illustrate its implementation using OpenCV accelerated by CUDA.
 
 ## Practice: implementing the Eigenface approach
 

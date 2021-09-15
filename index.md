@@ -744,26 +744,14 @@ Once discussed the theory behind the Eigenface approach, in the next section, we
 
 ## Practice: implementing the Eigenface approach
 
-In this section, we will provide the details of the implementation of
-the Eigenface approach for face recognition according to the theory
-schematically summarized in the previous section. For a better
-understanding, we will learn in parallel the theoretical steps of the
-foregoing section with the implementation ones of the present section.
-Accordingly, the structure of the present section will exactly retrace
-that of the previous one.  
-Before proceeding to illustrate the steps, let us spend a few words
-concerning the database used for the training.
+In this section, we will provide the details of the implementation of the Eigenface approach for face recognition according to the theory schematically summarized in the previous section. For a better understanding, we will learn in parallel the theoretical steps of the foregoing section with the implementation ones of the present section.
+Accordingly, the structure of the present section will exactly retrace that of the previous one.  
+Before proceeding to illustrate the steps, let us spend a few words concerning the database used for the training.
 
 ### Introducing the database
 
-The database on which we will apply the face recognition code is a
-small, customized database composed by \(24\) images, each image has a
-dimension of \(64\times 64\). The images refer to famous actors and
-actress’ and each of them is represented by \(4\) database images.  
-As mentioned above, we have assumed to have already applied a face
-detection code, so that the images regard only the actors or actress’
-faces. Accompanying the database, we also have a test image representing
-the subject to be recognized by the code. The database and test images
+The database on which we will apply the face recognition code is a small, customized database composed by <img src="https://render.githubusercontent.com/render/math?math=24"> images, each image has a dimension of <img src="https://render.githubusercontent.com/render/math?math=64\times 64">. The images refer to famous actors and actress’ and each of them is represented by <img src="https://render.githubusercontent.com/render/math?math=4"> database images.  
+As mentioned above, we have assumed to have already applied a face detection code, so that the images regard only the actors or actress’ faces. Accompanying the database, we also have a test image representing the subject to be recognized by the code. The database and test images
 have been obtained by reducing the resolution of original images down to
 \(64\times 64\) in order to have reduced processing times.  
 In particular, the images refer to the actors and actresses, namely,

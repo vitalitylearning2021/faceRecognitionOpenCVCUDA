@@ -721,23 +721,15 @@ The matrix <img src="https://render.githubusercontent.com/render/math?math=\math
 
 ### Step 7: computing the feature vector of the test image
 
-The seventh step consists of loading the image whose subject we want to
-recognize, say, the *test image*, and of subtracting from it the mean of
-image database. From that, it is then necessary to compute the
-*features* of the purged image.  
-On assuming that the purged image is, as for the database ones, an
-\(M\times N\) array and by supposing to having reshaped it in an array
-of \(MN\) elements obtaining the array
-\(\widetilde{\underline{\imath}}\), then, the array \(\underline{f}\)
-can be computed as:
+The seventh step consists of loading the image whose subject we want to recognize, say, the *test image*, and of subtracting from it the mean of image database. From that, it is then necessary to compute the *features* of the purged image.  
+On assuming that the purged image is, as for the database ones, an <img src="https://render.githubusercontent.com/render/math?math=M\times N"> array and by supposing to having reshaped it in an array of <img src="https://render.githubusercontent.com/render/math?math=MN"> elements obtaining the array <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\imath}}">, then, the array <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}"> can be computed as:
 
-\[\underline{f}=\widetilde{\underline{\imath}} \cdot \widetilde{\underline{\underline{U}}}_L.\]
+<p align="center">
+    <img src="equation_15.png" width="120" id="featureMatrix">     [15]
+</p>
 
-Its features can be evaluated, as for those of the database, by scalar
-products between \(\widetilde{\underline{\imath}}\) and the columns
-\(\widetilde{\underline{u}}_L^{(k)}\)’s of
-\(\widetilde{\underline{\underline{U}}}_L\), so getting an array
-\(\underline{f}\) of \(L\) elements.
+Its features can be evaluated, as for those of the database, by scalar products between <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{\imath}}"> and the columns <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{u}}_L^{(k)}">’s of
+<img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L">, so getting an array <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}"> of <img src="https://render.githubusercontent.com/render/math?math=L"> elements.
 
 ### Step 8: face recognition
 

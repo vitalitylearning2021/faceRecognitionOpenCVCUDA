@@ -751,28 +751,18 @@ Before proceeding to illustrate the steps, let us spend a few words concerning t
 ### Introducing the database
 
 The database on which we will apply the face recognition code is a small, customized database composed by <img src="https://render.githubusercontent.com/render/math?math=24"> images, each image has a dimension of <img src="https://render.githubusercontent.com/render/math?math=64\times 64">. The images refer to famous actors and actress’ and each of them is represented by <img src="https://render.githubusercontent.com/render/math?math=4"> database images.  
-As mentioned above, we have assumed to have already applied a face detection code, so that the images regard only the actors or actress’ faces. Accompanying the database, we also have a test image representing the subject to be recognized by the code. The database and test images
-have been obtained by reducing the resolution of original images down to
-\(64\times 64\) in order to have reduced processing times.  
-In particular, the images refer to the actors and actresses, namely,
-Cary Grant, Sean Connery, Harrison Ford, Nicole Kidman, Uma Thurman, and
-Meg Ryan.  
-For explanation purposes, we will be using figure [1.6](#seanConnery)
-given below. It depicts out of the images forming the database and
-referring to Sean Connery:
+As mentioned above, we have assumed to have already applied a face detection code, so that the images regard only the actors or actress’ faces. Accompanying the database, we also have a test image representing the subject to be recognized by the code. The database and test images have been obtained by reducing the resolution of original images down to <img src="https://render.githubusercontent.com/render/math?math=64\times 64"> in order to have reduced processing times.  
+In particular, the images refer to the actors and actresses, namely, Cary Grant, Sean Connery, Harrison Ford, Nicole Kidman, Uma Thurman, and Meg Ryan.  
+For explanation purposes, we will be using figure [6](#seanConnery) given below. It depicts out of the images forming the database and referring to Sean Connery:
 
-![The \(4\) Sean Connery database images.  
-([https://upload.wikimedia.org/wikipedia/commons/5/5d/SeanConneryCrop.jpg](https://upload.wikimedia.org/wikipedia/commons/5/5d/Sean_Connery_1980_Crop.jpg),  
-<https://www.flickr.com/photos/slightlyterrific/5190444885>,  
-[https://commons.wikimedia.org/wiki/File:SeanConnery(cropped).jpg](https://commons.wikimedia.org/wiki/File:Sean_Connery_1983_\(cropped\).jpg),  
-[https://commons.wikimedia.org/wiki/File:SeanConnery(1983).jpg](https://commons.wikimedia.org/wiki/File:Sean_Connery_\(1983\).jpg)).](Pictures/Chapter03/seanConnery.png)
+<p align="center">
+  <img src="seanConnery.png" width="400" id="seanConnery">
+  <br>
+     <em>Figure 6. Sean Connery database images.</em>
+</p>
 
-The images are stored in `.png` format and the file name of an image is
-an order number of three digits filled with `0`. For example, the file
-name of image `3` is `003.png`, while the file name of image `22` is
-`022.png`.  
-Before delving into the steps, the next code snippet reports the
-constants that will be used throughout the code:
+The images are stored in `.png` format and the file name of an image is an order number of three digits filled with `0`. For example, the file name of image `3` is `003.png`, while the file name of image `22` is `022.png`.  
+Before delving into the steps, the next code snippet reports the constants that will be used throughout the code:
 
 ``` c++
 const int numImages     = 24;
@@ -784,32 +774,13 @@ const int cCols         = 10;
 const int numEigenfaces = 4;
 ```
 
-In the above constants, `numImages` represents the overall number of
-images \(T\), `nRows` is the number of rows \(M\) of each image and
-`nCols` stands for the number of columns \(N\) of each image. Moreover,
-`numTrain` represents the overall number of database images we want to
-use in the training. It is chosen a value equal to `numImages` and,
-actually, is a redundant parameter in the rest of the code.  
-Nevertheless, it has been added to remember that not necessarily all the
-database images must be used in the training and, in general, `numTrain
-<= numImages`. Furthermore, `cRows` and `cCols` are magnification
-factors used in the visualization of the database images. Indeed, being
-the images “only” `64x64` sized, they would appear of very small size in
-the visualization.  
-For this reason, before being visualized, they are magnified of `cRows`
-along the rows and of `cCols` along the columns with a proper
-interpolation code. Finally, `numEigenfaces` represents the above
-mentioned overall number \(L\) of eigenvectors of the covariance
-matrix.  
-Let’s start with the implementation of face recognition based on PCA
-demonstrated in the eight steps given below.
+In the above constants, `numImages` represents the overall number of images <img src="https://render.githubusercontent.com/render/math?math=T">, `nRows` is the number of rows <img src="https://render.githubusercontent.com/render/math?math=M"> of each image and `nCols` stands for the number of columns <img src="https://render.githubusercontent.com/render/math?math=N"> of each image. Moreover, `numTrain` represents the overall number of database images we want to use in the training. It is chosen a value equal to `numImages` and, actually, is a redundant parameter in the rest of the code. Nevertheless, it has been added to remember that not necessarily all the database images must be used in the training and, in general, `numTrain <= numImages`. Furthermore, `cRows` and `cCols` are magnification factors used in the visualization of the database images. Indeed, being the images “only” `64x64` sized, they would appear of very small size in the visualization.  
+For this reason, before being visualized, they are magnified of `cRows` along the rows and of `cCols` along the columns with a proper interpolation code. Finally, `numEigenfaces` represents the above mentioned overall number <img src="https://render.githubusercontent.com/render/math?math=L"> of eigenvectors of the covariance matrix.  
+Let’s start with the implementation of face recognition based on PCA demonstrated in the eight steps given below.
 
 ### Step 1: defining the database matrix
 
-In order to create a \(T\times MN\) matrix containing the database, the
-initial things to do are declarations and definitions of variables which
-will enable the data loadings from the file. Such operations are
-indicated in Listing [\[step1FR1\]](#step1FR1) below:
+In order to create a <img src="https://render.githubusercontent.com/render/math?math=T\times MN"> matrix containing the database, the initial things to do are declarations and definitions of variables which will enable the data loadings from the file. Such operations are indicated in Listing [5](#step1FR1) below:
 
 ``` c++
 // --- Image path
@@ -820,16 +791,13 @@ cv::cuda::GpuMat d_A(numTrain, nRows * nCols, CV_32FC1);
 cv::Mat h_imageTemp, h_imageTempCast, h_imageTempResized;
 float *rowPointer;
 ```
+<p align="center" id="step1FR1" >
+     <em>Listing 5. Step <img src="https://render.githubusercontent.com/render/math?math=1"> of the Eigenface implementation - part <img src="https://render.githubusercontent.com/render/math?math=1">: defining the database matrix.</em>
+</p>
 
-In particular, `pathToData` contains the path to the directory where the
-database images are stored and `d_A` is the array stored on the GPU
-which will contain the entire loaded database and in which each row
-represents a different image. Indeed, `d_A` is of size `numTrain x
-(nRows * nCols)`. Then, we need temporary images, stored on the host,
-namely, `h_mageTemp`, `h_imageTempCast` and `h_imageTempResized` about
-which we will tell in a moment.  
-The real loading is implemented by a for loop as reported by Listing
-[\[step1FR2\]](#step1FR2) below:
+In particular, `pathToData` contains the path to the directory where the database images are stored and `d_A` is the array stored on the GPU
+which will contain the entire loaded database and in which each row represents a different image. Indeed, `d_A` is of size `numTrain x (nRows * nCols)`. Then, we need temporary images, stored on the host, namely, `h_mageTemp`, `h_imageTempCast` and `h_imageTempResized` about which we will tell in a moment.  
+The real loading is implemented by a for loop as reported by Listing [6](#step1FR2) below:
 
 ``` c++
 for (int k = 0; k < numImages; k++) {
@@ -860,56 +828,33 @@ for (int k = 0; k < numImages; k++) {
       h_imageTempCast.ptr<float>(0), h_imageTempCast.step * sizeof(float),
         h_imageTempCast.cols * sizeof(float), 1, cudaMemcpyHostToDevice)); }
 ```
+<p align="center" id="step1FR2" >
+     <em>Listing 6. Step <img src="https://render.githubusercontent.com/render/math?math=1"> of the Eigenface implementation - part <img src="https://render.githubusercontent.com/render/math?math=2">: loading the database matrix.</em>
+</p>
 
-The `for` loop sweeps the `numImages` database images. The first three
-rows of the `for` loop serve to define a string `s` containing the file
-name without extension. In particular, the loop index `k` is exploited
-to fill the string with the image number, while `std::setfill('0')` is
-used to complete the number with `0`’s.  
-The image is then read with `cv::imread`, stored in `h_imageTemp` and
-transposed by `cv::transpose`. Once read, the image is stored as a
-`CV_8UC1` image, while, for the subsequent processing, we need to cast
-it in the float compatible type `CV_32FC1`.  
-Accordingly, `h_imageTemp` is cast to `CV_32FC1` by
-`h_imageTemp.convertTo(h_imageTempCast, CV_32FC1)`. `h_imageTempCast` is
-afterwards reshaped to become a row by `h_imageTempCast =
-h_imageTempCast.reshape(0, 1)`. The subsequent rows using
-`cv::typeToString` permit to visualize both the type of `h_imageTemp`
-and that of `h_imageTempCast`.  
-Following the loading and the reshape, visualization takes place.
-However, the visualization instructions can be excluded, at
-compile-time, if not of interest, by a conditional compilation. The
-first step towards visualization is a resize obtained by the following
-row:
+The `for` loop sweeps the `numImages` database images. The first three rows of the `for` loop serve to define a string `s` containing the file name without extension. In particular, the loop index `k` is exploited to fill the string with the image number, while `std::setfill('0')` is used to complete the number with `0`’s.  
+The image is then read with `cv::imread`, stored in `h_imageTemp` and transposed by `cv::transpose`. Once read, the image is stored as a `CV_8UC1` image, while, for the subsequent processing, we need to cast it in the float compatible type `CV_32FC1`.  
+Accordingly, `h_imageTemp` is cast to `CV_32FC1` by `h_imageTemp.convertTo(h_imageTempCast, CV_32FC1)`. `h_imageTempCast` is afterwards reshaped to become a row by `h_imageTempCast = h_imageTempCast.reshape(0, 1)`. The subsequent rows using `cv::typeToString` permit to visualize both the type of `h_imageTemp` and that of `h_imageTempCast`.  
+Following the loading and the reshape, visualization takes place. However, the visualization instructions can be excluded, at compile-time, if not of interest, by a conditional compilation. The first step towards visualization is a resize obtained by the following row:
 
 ``` c++
 cv::resize(h_imageTemp, h_imageTempResized, cv::Size(nRows * cRows,
     nCols * cCols), cv::INTER_CUBIC);
 ```
 
-As mentioned above, the `resize` magnifies the database image to
-dimensions which are `cRows x cCols` larger. Bicubic interpolation is
-used for the resizing, as deductible from the `cv::INTER_CUBIC`
-parameter. Once magnified, the image is visualized by the below
-instructions:
+As mentioned above, the `resize` magnifies the database image to dimensions which are `cRows x cCols` larger. Bicubic interpolation is used for the resizing, as deductible from the `cv::INTER_CUBIC` parameter. Once magnified, the image is visualized by the below instructions:
 
 ``` c++
 cv::imshow("Dataset image", h_imageTempResized);
 cv::waitKey(0);
 ```
 
-In the previous code, `cv::imshow` visualizes the images, while
-`cv::waitKey(0)` waits for any key to be pressed.
+In the previous code, `cv::imshow` visualizes the images, while `cv::waitKey(0)` waits for any key to be pressed.
 
 ### Step 2: computing the average matrix
 
-The second step consists of the computation of the average database
-image. To this end, we define a `d_mean` array of `nRows x nCols`
-columns, of type `CV_32FC1` and we use the `cv::cuda::reduce` routine.
-The computation of the average image has been already illustrated in
-detail in the second example using OpenCV and CUDA dealt with above. We
-report the relevant instructions in Listing [\[step2FR1\]](#step2FR1)
-below:
+The second step consists of the computation of the average database image. To this end, we define a `d_mean` array of `nRows x nCols` columns, of type `CV_32FC1` and we use the `cv::cuda::reduce` routine.
+The computation of the average image has been already illustrated in detail in the second example using OpenCV and CUDA dealt with above. We report the relevant instructions in Listing [\[step2FR1\]](#step2FR1) below:
 
 ``` c++
 cv::cuda::GpuMat d_mean(1, nRows * nCols, CV_32FC1);

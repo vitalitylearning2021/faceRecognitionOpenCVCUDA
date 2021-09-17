@@ -853,17 +853,17 @@ In the previous code, `cv::imshow` visualizes the images, while `cv::waitKey(0)`
 
 ### Step 2: computing the average matrix
 
-The second step consists of the computation of the average database image. To this end, we define a `d_mean` array of `nRows x nCols` columns, of type `CV_32FC1` and we use the `cv::cuda::reduce` routine.
-The computation of the average image has been already illustrated in detail in the second example using OpenCV and CUDA dealt with above. We report the relevant instructions in Listing [\[step2FR1\]](#step2FR1) below:
+The second step consists of the computation of the average database image. To this end, we define a `d_mean` array of `nRows x nCols` columns, of type `CV_32FC1` and we use the `cv::cuda::reduce` routine. The computation of the average image has been already illustrated in detail in the second example using OpenCV and CUDA dealt with above. We report the relevant instructions in Listing [7](#step2FR1) below:
 
 ``` c++
 cv::cuda::GpuMat d_mean(1, nRows * nCols, CV_32FC1);
 cv::cuda::reduce(d_A, d_mean, 0, 1);
 ```
+<p align="center" id="xxx" >
+     <em>Listing 7. Step <img src="https://render.githubusercontent.com/render/math?math=2"> of the Eigenface implementation: computing the average matrix.</em>
+</p>
 
-Accompanying this step, in Listing [\[step2FR2\]](#step2FR2) given
-below, we also present the instruction for the visualization of the
-average image that can be excluded by a conditional compilation:
+Accompanying this step, in Listing [8](#step2FR2) given below, we also present the instruction for the visualization of the average image that can be excluded by a conditional compilation:
 
 ``` c++
 #ifdef SHOW_AVERAGE
@@ -879,23 +879,16 @@ average image that can be excluded by a conditional compilation:
     cv::waitKey(0);
 #endif
 ```
+<p align="center" id="xxx" >
+     <em>Listing 8. Step <img src="https://render.githubusercontent.com/render/math?math=2"> of the Eigenface implementation: showing the average matrix.</em>
+</p>
 
-It should be noticed that the average image is stored in the host array
-`h_mean` which is, in turn, initialized by the row, device-stored
-`d_mean` array. Before the actual visualization, `h_mean` must be
-reshaped to a `nRows x nCols` matrix, cast to `CV_8UC1` and magnified
-`cRows x cCols` times as explained for the database images. The last
-rows print out the types of the `h_mean` matrix before visualization, as
-we have already done in Listings [\[step1FR1\]](#step1FR1) and
-[\[step1FR2\]](#step1FR2), and perform the real visualization by
-`cv::imshow`.
+It should be noticed that the average image is stored in the host array `h_mean` which is, in turn, initialized by the row, device-stored `d_mean` array. Before the actual visualization, `h_mean` must be reshaped to a `nRows x nCols` matrix, cast to `CV_8UC1` and magnified `cRows x cCols` times as explained for the database images. The last
+rows print out the types of the `h_mean` matrix before visualization, as we have already done in Listings [5](#step1FR1) and [6](#step1FR2), and perform the real visualization by `cv::imshow`.
 
 ### Step 3: removing the average image from the database
 
-Purging the average image from the database images is a step already
-faced in the second simple example illustrated above so that the details
-will be skipped. The first part of Listing [\[step3FR\]](#step3FR)
-reported below retraces the mentioned example:
+Purging the average image from the database images is a step already faced in the second simple example illustrated above so that the details will be skipped. The first part of Listing [9](#step3FR) reported below retraces the mentioned example:
 
 ``` c++
 dim3 blockDim(BLOCKSIZE_X, BLOCKSIZE_Y);
@@ -928,18 +921,15 @@ cudaCHECK(cudaDeviceSynchronize());
         count++; }
 #endif
 ```
+<p align="center" id="step3FR" >
+     <em>Listing 9. Step <img src="https://render.githubusercontent.com/render/math?math=3"> of the Eigenface implementation: removing the average image from the database.</em>
+</p>
 
-The second part of [\[step3FR\]](#step3FR), moreover, consists of the
-visualization of the purged database images. The details are identical
-to those already illustrated for Listings [\[step1FR1\]](#step1FR1) and
-[\[step1FR2\]](#step1FR2). Also, these details will be skipped.
+The second part of [9](#step3FR), moreover, consists of the visualization of the purged database images. The details are identical to those already illustrated for Listings [5](#step1FR1) and [6](#step1FR2). Also, these details will be skipped.
 
 ### Step 4: computing the eigenvectors of the covariance matrix
 
-Also, the computation of the SVD of `d_A` has been already addressed
-before in the second example using OpenCV and CUDA. We report the full
-code of the present step in Listings [\[step4FR1\]](#step4FR1) and
-[\[step4FR2\]](#step4FR2):
+Also, the computation of the SVD of `d_A` has been already addressed before in the second example using OpenCV and CUDA. We report the full code of the present step in Listings [10](#step4FR1) and [11](#step4FR2):
 
 ``` c++
 cv::cuda::GpuMat d_A2;
@@ -958,17 +948,14 @@ int *d_devInfo; cudaCHECK(cudaMalloc(&d_devInfo, sizeof(int)));
 cusolverDnHandle_t cuSolverHandle;
 cuSolverCHECK(cusolverDnCreate(&cuSolverHandle));
 ```
+<p align="center" id="step4FR1" >
+     <em>Listing 10. Step <img src="https://render.githubusercontent.com/render/math?math=4"> of the Eigenface implementation: computing the eigenvectors of the covariance matrix - part <img src="https://render.githubusercontent.com/render/math?math=1">.</em>
+</p>
 
-Strictly speaking, we do not need to compute the SVD of
-\(\widetilde{\underline{\underline{A}}}\), but of
-\(\widetilde{\underline{\underline{A}}}/\sqrt{T}\); for this reason, it
-is necessary to divide the elements of `d_A` by `sqrt((float)numTrain)`.
-This can be obtained by using the `cv::cuda::multiply` routine which, in
-the version used by Listing [\[step4FR1\]](#step4FR1), multiplies all
+Strictly speaking, we do not need to compute the SVD of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}">, but of <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}/\sqrt{T}">; for this reason, it is necessary to divide the elements of `d_A` by `sqrt((float)numTrain)`. This can be obtained by using the `cv::cuda::multiply` routine which, in the version used by Listing [10](#step4FR1), multiplies all
 the elements of `d_A` by the same scalar and then stores the result in
 `d_A` again.  
-The remaining part of Listing [\[step4FR1\]](#step4FR1) is given in
-Listing [\[step4FR2\]](#step4FR2) below:
+The remaining part of Listing [10](#step4FR1) is given in Listing [11](#step4FR2) below:
 
 ``` c++
 int workSize = 0;
@@ -990,13 +977,12 @@ else {
     printf("WARNING: h_devInfo = %d : SVD did not converge \n", 
     h_devInfo); }
 ```
+<p align="center" id="step4FR2" >
+     <em>Listing 11. Step <img src="https://render.githubusercontent.com/render/math?math=4"> of the Eigenface implementation: computing the eigenvectors of the covariance matrix - part <img src="https://render.githubusercontent.com/render/math?math=2">.</em>
+</p>
 
-According to the cuSOLVER User’s Manual , when using `cusolverDnSgesvd`,
-the content of `d_A` is destroyed on exit; for this reason, before
-normalizing \(\widetilde{\underline{\underline{A}}}\) and launching
-`cusolverDnSgesvd`, a copy of `d_A` is operated by defining a
-`cv::cuda::GpuMat`, `d_A2` array and by copying the content of `d_A` in
-`d_A2` by `d_A.copyTo(d_A2)`.
+According to the cuSOLVER User’s Manual, when using `cusolverDnSgesvd`, the content of `d_A` is destroyed on exit; for this reason, before normalizing <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{A}}"> and launching `cusolverDnSgesvd`, a copy of `d_A` is operated by defining a
+`cv::cuda::GpuMat`, `d_A2` array and by copying the content of `d_A` in `d_A2` by `d_A.copyTo(d_A2)`.
 
 ### Step 5: selecting the eigenvectors useful for recognition
 

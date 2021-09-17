@@ -859,7 +859,7 @@ The second step consists of the computation of the average database image. To th
 cv::cuda::GpuMat d_mean(1, nRows * nCols, CV_32FC1);
 cv::cuda::reduce(d_A, d_mean, 0, 1);
 ```
-<p align="center" id="xxx" >
+<p align="center" id="step2FR1" >
      <em>Listing 7. Step <img src="https://render.githubusercontent.com/render/math?math=2"> of the Eigenface implementation: computing the average matrix.</em>
 </p>
 
@@ -879,7 +879,7 @@ Accompanying this step, in Listing [8](#step2FR2) given below, we also present t
     cv::waitKey(0);
 #endif
 ```
-<p align="center" id="xxx" >
+<p align="center" id="step2FR2" >
      <em>Listing 8. Step <img src="https://render.githubusercontent.com/render/math?math=2"> of the Eigenface implementation: showing the average matrix.</em>
 </p>
 

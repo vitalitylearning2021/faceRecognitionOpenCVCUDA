@@ -1012,7 +1012,7 @@ cv::cuda::GpuMat d_features(numEigenfaces, numTrain, CV_32FC1);
 cv::cuda::gemm(d_Umat, d_A2, 1.f, d_features, 0.f, d_features, 
     cv::GEMM_2_T);
 ```
-<p align="center" id="xxx" >
+<p align="center" id="step6FR" >
      <em>Listing 13. Step <img src="https://render.githubusercontent.com/render/math?math=6"> of the Eigenface implementation: computing the feature vectors of the database images.</em>
 </p>
 
@@ -1144,7 +1144,7 @@ In this Subsection, we see the results obtained by the application of the develo
 Along with the database images, the GitHub page of the present project contains also a test image, named `seanConneryTestImage.png`, to test the performance of the approach. The following figure 7 presents the test image and the result of the recognition processing:
 
 <p align="center">
-  <img src="faceDetectionResults.jpg" width="400" id="xxx">
+  <img src="faceDetectionResults.png" width="400" id="xxx">
   <br>
      <em>Left: Sean Connery test image. Right: Result of the processing.</em>
 </p>

@@ -986,63 +986,41 @@ According to the cuSOLVER User’s Manual, when using `cusolverDnSgesvd`, the co
 
 ### Step 5: selecting the eigenvectors useful for recognition
 
-This step has not yet been faced throughout the present chapter, so we
-need to discuss it in some details.  
-It consists of retaining the first `numEigenfaces` columns of `d_U`. To
-this end, it would be in principle sufficient to define a device-side
-matrix `d_Umat`, of dimensions \(L\times MN\), or, equivalently,
-`numEigenfaces x d_A.cols`. However, to show the use of the operator
-`cv::Range`, we define first a matrix `d_Umat`, of dimensions
-\(MN\times MN\) by initializing it with the values contained in the
-`d_U` array and, later on, the operator `cv::Range` is applied to
-`d_Umat` in order to select the rows and columns of interest.  
-The columns of interest are then copied to `d_Umat` by the `copyTo`
-method. Using the `cv::Range` operator, the final dimensions of `d_Umat`
-will be \(L\times MN\). The code snippet for implementation is reported
-in Listing [\[step5FR\]](#step5FR):
+This step has not yet been faced throughout the present chapter, so we need to discuss it in some details.  
+It consists of retaining the first `numEigenfaces` columns of `d_U`. To this end, it would be in principle sufficient to define a device-side matrix `d_Umat`, of dimensions <img src="https://render.githubusercontent.com/render/math?math=L\times MN">, or, equivalently, `numEigenfaces x d_A.cols`. However, to show the use of the operator
+`cv::Range`, we define first a matrix `d_Umat`, of dimensions <img src="https://render.githubusercontent.com/render/math?math=MN\times MN"> by initializing it with the values contained in the `d_U` array and, later on, the operator `cv::Range` is applied to `d_Umat` in order to select the rows and columns of interest.  
+The columns of interest are then copied to `d_Umat` by the `copyTo` method. Using the `cv::Range` operator, the final dimensions of `d_Umat` will be <img src="https://render.githubusercontent.com/render/math?math=L\times MN">. The code snippet for implementation is reported in Listing [12](#step5FR):
 
 ``` c++
 cv::cuda::GpuMat d_Umat(d_A.cols, d_A.cols, CV_32FC1, d_U);
 d_Umat(cv::Range(0, numEigenfaces), 
     cv::Range(0, d_Umat.rows)).copyTo(d_Umat);
 ```
+<p align="center" id="step5FR" >
+     <em>Listing 12. Step <img src="https://render.githubusercontent.com/render/math?math=5"> of the Eigenface implementation: selecting the eigenvectors useful for recognition.</em>
+</p>
 
-It should be noticed that the selection should regard the columns of
-`d_U`, while, opposite to that, in the above code, the selection regards
-the rows. This is due to the fact that the cuSOLVER library assumes
-column-major storage, while OpenCV accelerated with CUDA assumes
-row-major storage. Nonetheless, matrix `d_Umat` serves just, for the
-next step, as it is stored on exit to Listing [\[step5FR\]](#step5FR).
-In other words, `d_Umat` coincides already with
-\(\widetilde{\underline{\underline{U}}}_L^t\) of equation
-([\[featureMatrix\]](#featureMatrix)).
+It should be noticed that the selection should regard the columns of `d_U`, while, opposite to that, in the above code, the selection regards the rows. This is due to the fact that the cuSOLVER library assumes column-major storage, while OpenCV accelerated with CUDA assumes row-major storage. Nonetheless, matrix `d_Umat` serves just, for the
+next step, as it is stored on exit to Listing [12](#step5FR). In other words, `d_Umat` coincides already with <img src="https://render.githubusercontent.com/render/math?math=\widetilde{\mathbf{U}}_L^t"> of equation [\[14\]](#featureMatrix).
 
 ### Step 6: computing the feature vectors of the database images
 
-As above highlighted, the computation of the features can be performed
-by a simple matrix product. It is sufficient to define the device space
-for the result, namely, the `cv::cuda::GpuMat` matrix `d_features` of
-size `numEigenfaces x numTrain`:
+As above highlighted, the computation of the features can be performed by a simple matrix product. It is sufficient to define the device space for the result, namely, the `cv::cuda::GpuMat` matrix `d_features` of size `numEigenfaces x numTrain`:
 
 ``` c++
 cv::cuda::GpuMat d_features(numEigenfaces, numTrain, CV_32FC1);
 cv::cuda::gemm(d_Umat, d_A2, 1.f, d_features, 0.f, d_features, 
     cv::GEMM_2_T);
 ```
+<p align="center" id="xxx" >
+     <em>Listing 13. Step <img src="https://render.githubusercontent.com/render/math?math=6"> of the Eigenface implementation: computing the feature vectors of the database images.</em>
+</p>
 
-The transposition is represented by the use of the parameter
-`cv::GEMM_2_T`. The matrix multiplication can be performed by applying
-`cv::cuda::gemm`, as done above, to matrices `d_Umat`, which contains
-the selection of the columns of `d_U`, and `d_A2`, which contains the
-purged database. It should be noticed that `d_A2` must be transposed
-before being used, as required by equation
-([\[featureMatrix\]](#featureMatrix)).
+The transposition is represented by the use of the parameter `cv::GEMM_2_T`. The matrix multiplication can be performed by applying `cv::cuda::gemm`, as done above, to matrices `d_Umat`, which contains the selection of the columns of `d_U`, and `d_A2`, which contains the purged database. It should be noticed that `d_A2` must be transposed before being used, as required by equation [\[14\]](#featureMatrix).
 
 ### Step 7: computing the feature vector of the test image
 
-The purpose of the present step is to load the test image from the file
-and to compute its feature vector. The instructions necessary to this
-end:
+The purpose of the present step is to load the test image from the file and to compute its feature vector. The instructions necessary to this end:
 
 ``` c++
 // --- Load test image
@@ -1069,13 +1047,11 @@ cv::waitKey(0);
 cv::imshow("Test image", h_imageTempResized);
 cv::waitKey(0);
 ```
+<p align="center" id="step7FR1" >
+     <em>Listing 14. Step <img src="https://render.githubusercontent.com/render/math?math=6"> of the Eigenface implementation: computing the feature vectors of the database images.</em>
+</p>
 
-Listing [\[step7FR1\]](#step7FR1) concerns the loading and the
-visualization of the test image, a problem that we have already
-abundantly faced and on which we will not dwell anymore. The code below
-shows the copying of the loaded test image from host to device, the
-subtraction of the mean database image and the computation of the
-feature vector:
+Listing [14](#step7FR1) concerns the loading and the visualization of the test image, a problem that we have already abundantly faced and on which we will not dwell anymore. The code below shows the copying of the loaded test image from host to device, the subtraction of the mean database image and the computation of the feature vector:
 
 ``` c++
 // --- Copy generic row
@@ -1093,33 +1069,19 @@ cv::cuda::GpuMat d_featureVec(numEigenfaces, 1, CV_32FC1);
 cv::cuda::gemm(d_Umat, d_testImage, 1.f, d_featureVec, 0.f, d_featureVec,
     cv::GEMM_2_T);
 ```
+<p align="center" id="xxx" >
+     <em>Listing 15. Step <img src="https://render.githubusercontent.com/render/math?math=7"> of the Eigenface implementation: computing the feature vector of the test image - part <img src="https://render.githubusercontent.com/render/math?math=2">.</em>
+</p>
 
-Concerning the second part reported in code above, the instructions are
-basically common to those in Listing [\[step6FR\]](#step6FR) of Step 6
-above. There are a few main differences to highlight:
+Concerning the second part reported in code above, the instructions are basically common to those in Listing [13](#step6FR) of Step 6 above. There are a few main differences to highlight:
 
-1.  the test image, stored in the `d_testImage` device vector, is purged
-    of the average `d_mean` by using `cv::cuda::subtract` instead of a
-    kernel;
-
-2.  the `d_testImage` is a row vector and not a column vector; this is
-    done to enable the subtraction of the average image, stored in
-    `d_mean` which is a row vector;
-
-3.  concerning the use of `cv::cuda::gemm`, differently from the
-    foregoing step in which `d_A2` was a matrix, now `d_testImage` is a
-    row vector; however, as in Listing [\[step6FR\]](#step6FR),
-    `d_testImage` must be transposed, as it can be inferred from the
-    last argument of `cv::cuda::gemm` which is equal to `cv::GEMM_2_T`.
+  - the test image, stored in the `d_testImage` device vector, is purged of the average `d_mean` by using `cv::cuda::subtract` instead of a kernel;
+  - the `d_testImage` is a row vector and not a column vector; this is done to enable the subtraction of the average image, stored in `d_mean` which is a row vector;
+  - concerning the use of `cv::cuda::gemm`, differently from the foregoing step in which `d_A2` was a matrix, now `d_testImage` is a row vector; however, as in Listing [13](#step6FR), `d_testImage` must be transposed, as it can be inferred from the last argument of `cv::cuda::gemm` which is equal to `cv::GEMM_2_T`.
 
 ### Step 8: face recognition
 
-Let us recall that the target of this step is to compute the norms in
-equation ([\[normFR\]](#normFR)) and to determine the index \(t\) of the
-minimum one. The number of norms to be computed coincides with \(T\),
-namely `numTrain`, that is, the number of database images. Listing
-[\[step8FR\]](#step8FR) displays the snippet corresponding to such a
-step:
+Let us recall that the target of this step is to compute the norms in equation [\[16\]](#normFR) and to determine the index <img src="https://render.githubusercontent.com/render/math?math=t"> of the minimum one. The number of norms to be computed coincides with <img src="https://render.githubusercontent.com/render/math?math=T">, namely `numTrain`, that is, the number of database images. Listing [16](#step8FR) displays the snippet corresponding to such a step:
 
 ``` c++
 cv::cuda::GpuMat d_temp(numEigenfaces, 1, CV_32FC1);
@@ -1151,102 +1113,56 @@ cv::resize(h_recognizedImage, h_recognizedImageResized,
 cv::imshow("Recognized image", h_recognizedImageResized);
 cv::waitKey(0);
 ```
+<p align="center" id="step8FR" >
+     <em>Listing 16. Step <img src="https://render.githubusercontent.com/render/math?math=8"> of the Eigenface approach: face recognition.</em>
+</p>
 
-To begin with, we stress that `d_temp` is a column vector of lenght
-\(L\), or `numEigenfaces`, appointed to temporarily contain the vectors
-of which the norm must be computed. Also, `d_similarityScores` is a
-vector of lenght \(T\), or `numTrain`, which will contain \(d^2_t\),
-\(t=1,\ldots,T\). Obviously, being the \(d_t\)’s non-negative
-quantities, then determining the index of a minimum of the \(d_t\)’s or
-of the \(d_t^2\)’s will provide the same result. The code proceeds by
-sweeping, using a loop, the various features of the purged database. In
-particular, the `t`-th column of the `d_features` matrix is copied to
-`d_temp` by `d_features(cv::Range(0, numEigenfaces), cv::Range(t, t
-+ 1)).copyTo(d_temp)`.  
-In other words, \(\underline{f}^{(t)}\) is copied in `d_temp`. Later on,
-\(\underline{f}\), namely, the features vector of the test image, is
-subtracted from \(\underline{f}^{(t)}\), by using `cv::cuda::subtract`.
-At this point, `d_temp` contains \(\underline{f}^{(t)}-\underline{f}\).
+To begin with, we stress that `d_temp` is a column vector of lenght <img src="https://render.githubusercontent.com/render/math?math=L">, or `numEigenfaces`, appointed to temporarily contain the vectors of which the norm must be computed. Also, `d_similarityScores` is a vector of lenght <img src="https://render.githubusercontent.com/render/math?math=T">, or `numTrain`, which will contain <img src="https://render.githubusercontent.com/render/math?math=d^2_t">, <img src="https://render.githubusercontent.com/render/math?math=t=1,\ldots,T">. Obviously, being the <img src="https://render.githubusercontent.com/render/math?math=d_t">’s non-negative quantities, then determining the index of a minimum of the <img src="https://render.githubusercontent.com/render/math?math=d_t">’s or of the <img src="https://render.githubusercontent.com/render/math?math=d_t^2">’s will provide the same result. The code proceeds by sweeping, using a loop, the various features of the purged database. In particular, the `t`-th column of the `d_features` matrix is copied to `d_temp` by `d_features(cv::Range(0, numEigenfaces), cv::Range(t, t + 1)).copyTo(d_temp)`.  
+In other words, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}^{(t)}"> is copied in `d_temp`. Later on, <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}">, namely, the features vector of the test image, is subtracted from <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}^{(t)}">, by using `cv::cuda::subtract`. At this point, `d_temp` contains <img src="https://render.githubusercontent.com/render/math?math=\mathbf{f}^{(t)}-\mathbf{f}">.
 It should be considered that:
 
-\[d_t=\lVert \underline{f}^{(t)} - \underline{f} \lVert=\sum_{l=0}^{L-1}| f_l^{(t)}-f_l|^2, \;\; t=1,\ldots,T.\]
+<p align="center">
+   <img src="equation_17.png" width="200" id="eig">     [17]
+</p>
 
-From the previous equation, \(f_l^{(t)}\) and \(f_l\) are the \(l\)-th
-components of the feature vectors of the \(t\)-th purged database image
-and of the test image, respectively.  
-It is necessary to firstly square the difference between the homologous
-components and then performing a summation, which we now know to be
-computable by a reduction. Squaring the difference is achieved by
-`cv::cuda::sqr`, while reduction, as seen, by .  
-Finally, \(d_t^2\) is written by `cv::cuda::reduce` to the `t`-th
-position of `d_similarityScores`. Being `d_similarityScores` a column
-vector, then writing \(d_t^2\) to the `t`-th position can be regarded as
-writing \(d_t^2\) to the `t`-th row indexed by
-`d_similarityScores.row(t)`.  
-Finally, once constructed the vector \(d_t^2\), \(t=1,\ldots,T\), its
-minimum index should be determined. This can be accomplished using
+From the previous equation, <img src="https://render.githubusercontent.com/render/math?math=f_l^{(t)}"> and <img src="https://render.githubusercontent.com/render/math?math=f_l"> are the <img src="https://render.githubusercontent.com/render/math?math=l">-th components of the feature vectors of the <img src="https://render.githubusercontent.com/render/math?math=t">-th purged database image and of the test image, respectively.  
+It is necessary to firstly square the difference between the homologous components and then performing a summation, which we now know to be computable by a reduction. Squaring the difference is achieved by `cv::cuda::sqr`, while reduction, as seen, by `cv::cuda::reduce`.  
+Finally, <img src="https://render.githubusercontent.com/render/math?math=d_t^2"> is written by `cv::cuda::reduce` to the `t`-th position of `d_similarityScores`. Being `d_similarityScores` a column vector, then writing <img src="https://render.githubusercontent.com/render/math?math=d_t^2"> to the `t`-th position can be regarded as
+writing <img src="https://render.githubusercontent.com/render/math?math=d_t^2"> to the `t`-th row indexed by `d_similarityScores.row(t)`.  
+Finally, once constructed the vector <img src="https://render.githubusercontent.com/render/math?math=d_t^2">, <img src="https://render.githubusercontent.com/render/math?math=t=1,\ldots,T">, its minimum index should be determined. This can be accomplished using
 
 ``` c++
 cv::cuda::minMaxLoc(d_similarityScores, &minVal, &maxVal, &minLoc, &maxLoc)
 ```
 
-which finds out the minimum, maximum and their relative indices of a
-sequence.  
-The last part of the code consists of loading and visualizing the
-database image corresponding to the minimum index.
+which finds out the minimum, maximum and their relative indices of a sequence.  
+The last part of the code consists of loading and visualizing the database image corresponding to the minimum index.
 
 ### Results of the implementation
 
-In this Subsection, we see the results obtained by the application of
-the developed face recognition code and available at the above mentioned
-GitHub link.  
-Along with the database images, the GitHub page of the present chapter
-contains also a test image, named `seanConneryTestImage.png`, to test
-the performance of the approach. The following figure 7 presents the
-test image and the result of the recognition processing:
+In this Subsection, we see the results obtained by the application of the developed face recognition code.  
+Along with the database images, the GitHub page of the present project contains also a test image, named `seanConneryTestImage.png`, to test the performance of the approach. The following figure 7 presents the test image and the result of the recognition processing:
 
-![Left: Sean Connery test image. Right: Result of the processing.
-[https://upload.wikimedia.org/wikipedia/commons/5/5d/SeanConneryCrop.jpg](https://upload.wikimedia.org/wikipedia/commons/5/5d/Sean_Connery_1980_Crop.jpg).
-<https://www.publicdomainpictures.net/it/view-image.php?image=22491&picture=sean-connery>](/Chapter03/faceDetectionResults.png)
+<p align="center">
+  <img src="faceDetectionResults.jpg" width="400" id="xxx">
+  <br>
+     <em>Left: Sean Connery test image. Right: Result of the processing.</em>
+</p>
 
 According to the approach illustrated above:
 
 1.  the relevant eigenspace has been computed from the database images;
+2.  the feature vectors (namely, the projections over the eigenspace) of the database images have been calculated;
+3.  the feature vector (namely, the projection over the eigenspace) of the test image has been determined;
+4.  the database image having the feature vector closest to that of the test image has been picked up.
 
-2.  the feature vectors (namely, the projections over the eigenspace) of
-    the database images have been calculated;
-
-3.  the feature vector (namely, the projection over the eigenspace) of
-    the test image has been determined;
-
-4.  the database image having the feature vector closest to that of the
-    test image has been picked up.
-
-As can be seen, the developed face recognition algorithm is capable to
-correctly associate the test image to the represented character.  
-In conclusion, the code using the Eigenfaces idea, although very simple,
-has enabled to both reach a correct result in terms of recognition and
-to become familiar with two libraries of the CUDA world.
+As can be seen, the developed face recognition algorithm is capable to correctly associate the test image to the represented character.  
+In conclusion, the code using the Eigenfaces idea, although very simple, has enabled to both reach a correct result in terms of recognition and to become familiar with two libraries of the CUDA world.
 
 ## Summary
 
-In this chapter, we have faced a problem finding large applications in
-nowadays life, namely, face recognition.  
-The problem has been addressed using a classical code amenable of a
-simple implementation, known as the Eigenfaces approach, which uses the
-Principal Component Analysis (PCA) technique. Although the Eigenfaces
-code is not the approach to having the best performance available
-throughout the literature, it has enabled us to highlight the use of
-OpenCV, which is one of the most used Computer Vision libraries
-available, and of its CUDA-accelerated routines.  
-It has also helped us in becoming familiar with the cuSOLVER library and
-using its routines for the computation of the Singular Value
-Decomposition (SVD) of a matrix.  
-Nevertheless, by the tools learned in the present chapter, it should not
-be difficult to implement more modern and performing approaches, like
-Fisherfaces or Laplacianfaces. Moreover, the PCA code nested in the
-Eigenfaces approach can be exploited in other frameworks of Machine
-Learning.  
-The next chapter will give us the opportunity to discover other
-CUDA-accelerated, OpenCV functionalities, namely, those referring to the
-processing of the optical flow of images.
+In this project, we have faced a problem finding large applications in nowadays life, namely, face recognition.  
+The problem has been addressed using a classical code amenable of a simple implementation, known as the Eigenfaces approach, which uses the Principal Component Analysis (PCA) technique. Although the Eigenfaces code is not the approach to having the best performance available throughout the literature, it has enabled us to highlight the use of
+OpenCV, which is one of the most used Computer Vision libraries available, and of its CUDA-accelerated routines.  
+It has also helped us in becoming familiar with the cuSOLVER library and using its routines for the computation of the Singular Value Decomposition (SVD) of a matrix.  
+Nevertheless, by the tools learned in the present chapter, it should not be difficult to implement more modern and performing approaches, like Fisherfaces or Laplacianfaces. Moreover, the PCA code nested in the Eigenfaces approach can be exploited in other frameworks of Machine Learning.  
